@@ -14,10 +14,10 @@ This project is currently in development.
 
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/mind-palette.git
+git clone https://github.com/SeeYounsunny/Mind-Palette.git
 
 # Navigate to the project directory
-cd mind-palette
+cd Mind-Palette
 
 # Install dependencies (if applicable)
 npm install
