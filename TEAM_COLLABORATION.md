@@ -208,21 +208,86 @@
 
 ## Git 워크플로우
 
-### 커밋 담당자: 황희정 (프론트엔드 개발자)
+### 🚀 Pull Request를 통한 협업 (권장)
+
+#### **1. 각자 브랜치에서 작업**
 
 ```bash
-# 다른 팀원들의 작업을 받아서 통합
+# 자신의 브랜치로 이동
+git checkout feature/자신의이름-역할
+
+# 작업 후 커밋
 git add .
-git commit -m "feat: [팀원명] 기능명 추가"
-git push origin main
+git commit -m "feat: 작업 내용 설명"
+git push origin feature/자신의이름-역할
 ```
 
-### 다른 팀원들
+#### **2. Pull Request 생성**
 
-- **권은영**: 디자인 파일을 황희정에게 전달
-- **김가령**: AI 모델 코드를 황희정에게 전달
-- **김하나**: 기획 문서를 황희정에게 전달
-- **박연선**: 발표자료를 별도로 관리
+1. **GitHub 저장소 페이지** 이동
+2. **"Compare & pull request"** 버튼 클릭
+3. **제목과 설명** 작성
+4. **리뷰어 지정** (팀원들)
+5. **"Create pull request"** 클릭
+
+#### **3. 코드 리뷰 및 승인**
+
+- 다른 팀원들이 코드 리뷰
+- 피드백 반영 후 수정
+- 승인 후 main 브랜치에 병합
+
+#### **4. 최신 코드 받기**
+
+```bash
+# main 브랜치로 이동
+git checkout main
+
+# 최신 코드 받기
+git pull origin main
+
+# 자신의 브랜치로 돌아가서 최신 코드 반영
+git checkout feature/자신의이름-역할
+git merge main
+```
+
+### 📋 팀원별 브랜치명 규칙
+
+- **김하나**: `feature/hana-pm`
+- **권은영**: `feature/eunyoung-design`
+- **황희정**: `feature/heejung-frontend`
+- **김가령**: `feature/garyeong-ai`
+- **박연선**: `feature/younsun-presentation`
+
+### 🔄 협업 시나리오 예시
+
+#### **시나리오 1: 새로운 기능 개발**
+
+1. **권은영**이 디자인 작업 완료
+2. **Pull Request** 생성
+3. **팀원들이 리뷰** 후 승인
+4. **main에 병합**
+5. **다른 팀원들이 최신 코드 받기**
+
+#### **시나리오 2: 버그 수정**
+
+1. **황희정**이 버그 발견 및 수정
+2. **Pull Request** 생성
+3. **빠른 리뷰** 후 승인
+4. **main에 병합**
+
+### ⚡ 빠른 변경사항 (직접 Merge)
+
+- 설정 파일 수정
+- 문서 업데이트
+- 작은 버그 수정
+
+```bash
+# main 브랜치에서 직접 수정
+git checkout main
+git add .
+git commit -m "docs: 문서 업데이트"
+git push origin main
+```
 
 ## 도구 및 설정
 
