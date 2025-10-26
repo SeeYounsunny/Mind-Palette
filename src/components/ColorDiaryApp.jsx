@@ -1,5 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChevronRight, ChevronLeft, Calendar, Save, Eye } from 'lucide-react';
+import * as api from '../services/api'; // 가령님의 API 서비스
+
+const STORAGE_KEY = 'mindPaletteEntries'; // LocalStorage 키
+const USE_API = false; // API 사용 여부 (가령님 백엔드 준비되면 true로 변경)
 
 const ColorDiaryApp = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -29,6 +33,61 @@ const ColorDiaryApp = () => {
     '#7A0724', '#864F3A', '#84753C', '#5B8643', '#206340', 
     '#256872', '#154D6F', '#0D295D', '#39155F', '#4F1040', '#000000'
   ];
+
+  // AI 분석을 위한 헬퍼 함수들
+  const calculateColorIntensity = (color) => {
+    // 색상의 명도를 계산하여 0-100 범위로 반환
+    // 예: 연한 색상 = 높은 값, 진한 색상 = 낮은 값
+    if (colors.slice(0, 11).includes(color)) return 80; // 연한 색상
+    if (colors.slice(11, 22).includes(color)) return 50; // 중간 색상
+    if (colors.slice(22, 33).includes(color)) return 20; // 진한 색상
+    return 50;
+  };
+
+  const categorizeEmotion = (emotion) => {
+    // 감정을 카테고리로 분류
+    const positiveEmotions = ['기쁨', '사랑', '감사', '희망', '설렘', '만족', '행복', '평온'];
+    const negativeEmotions = ['슬픔', '분노', '두려움', '혐오', '절망', '외로움', '불안', '우울', '짜증', '후회'];
+    const neutralEmotions = ['놀람'];
+    
+    if (positiveEmotions.includes(emotion)) return 'positive';
+    if (negativeEmotions.includes(emotion)) return 'negative';
+    return 'neutral';
+  };
+
+  const analyzeSentiment = (emotion) => {
+    // 감정의 긍정/부정/중립 분석
+    return categorizeEmotion(emotion);
+  };
+
+  const extractKeywords = (text) => {
+    // 간단한 키워드 추출 (향후 AI로 개선 가능)
+    if (!text) return [];
+    const commonWords = ['은', '는', '이', '가', '을', '를', '에', '의', '와', '과', '그리고', '하지만', '그런데'];
+    return text.split(' ')
+      .filter(word => word.length > 2 && !commonWords.includes(word))
+      .slice(0, 5); // 최대 5개
+  };
+
+  // 앱 시작 시 LocalStorage에서 데이터 로드
+  useEffect(() => {
+    const savedData = localStorage.getItem(STORAGE_KEY);
+    if (savedData) {
+      try {
+        const parsedData = JSON.parse(savedData);
+        setSavedEntries(parsedData);
+      } catch (error) {
+        console.error('Failed to load saved data:', error);
+      }
+    }
+  }, []);
+
+  // savedEntries가 변경될 때마다 LocalStorage에 저장
+  useEffect(() => {
+    if (savedEntries.length > 0) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(savedEntries));
+    }
+  }, [savedEntries]);
 
   // 감정 리스트
   const emotions = [
@@ -87,19 +146,70 @@ const ColorDiaryApp = () => {
     const finalEmotion = diaryData.emotion === '기타' ? customEmotion : diaryData.emotion;
     const finalWeatherFeeling = diaryData.weatherFeeling === '기타' ? customWeatherFeeling : diaryData.weatherFeeling;
 
+    // API를 사용하는 경우 가령님의 AI 서비스 연동
+    let savedEmotionData;
+    
+    if (USE_API) {
+      try {
+        // AI 색상 분석 (가령님 API 호출)
+        const aiAnalysis = await api.analyzeColor({
+          color: diaryData.color,
+          intensity: calculateColorIntensity(diaryData.color),
+          context: diaryData.episode
+        });
+        
+        console.log('AI 색상 분석 결과:', aiAnalysis);
+        
+        // 감정 기록 저장 (가령님 API 호출)
+        savedEmotionData = await api.saveEmotionWithFallback({
+          color: diaryData.color,
+          intensity: calculateColorIntensity(diaryData.color),
+          emotion: finalEmotion,
+          weatherFeeling: finalWeatherFeeling,
+          episode: diaryData.episode,
+          timeOfDay: diaryData.timeOfDay,
+          weather: diaryData.weather,
+          timestamp: new Date().toISOString(),
+          aiAnalysis: {
+            candidates: aiAnalysis.candidates,
+            colorIntensity: calculateColorIntensity(diaryData.color),
+            emotionCategory: categorizeEmotion(finalEmotion),
+            sentiment: analyzeSentiment(finalEmotion),
+            contextKeywords: extractKeywords(diaryData.episode)
+          }
+        });
+        
+        alert(`오늘의 ${todayEntries.length + 1}번째 일기가 서버에 저장되었습니다!`);
+      } catch (error) {
+        console.error('API 저장 실패, LocalStorage로 대체:', error);
+        alert('서버 저장 실패, 로컬에 저장되었습니다.');
+      }
+    }
+    
+    // AI 분석을 위한 추가 데이터 (가령님 데이터 구조와 통합)
     const newEntry = {
       ...diaryData,
       emotion: finalEmotion,
       weatherFeeling: finalWeatherFeeling,
       date: today,
       timestamp: new Date().toLocaleString(),
-      id: Date.now() // 각 일기에 고유 ID 부여
+      id: savedEmotionData?.id || Date.now(), // 서버 ID 또는 로컬 ID
+      // AI 분석 데이터 구조
+      aiAnalysis: {
+        colorIntensity: calculateColorIntensity(diaryData.color),
+        emotionCategory: categorizeEmotion(finalEmotion),
+        sentiment: analyzeSentiment(finalEmotion),
+        contextKeywords: extractKeywords(diaryData.episode),
+        ...(USE_API && savedEmotionData?.candidates && { candidates: savedEmotionData.candidates })
+      }
     };
     
     const updatedEntries = [...savedEntries, newEntry];
     setSavedEntries(updatedEntries);
     
-    alert(`오늘의 ${todayEntries.length + 1}번째 일기가 저장되었습니다!`);
+    if (!USE_API) {
+      alert(`오늘의 ${todayEntries.length + 1}번째 일기가 저장되었습니다!`);
+    }
     setCurrentPage(1);
     setDiaryData({
       color: '',
