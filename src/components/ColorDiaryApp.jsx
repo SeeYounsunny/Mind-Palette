@@ -19,6 +19,54 @@ const ColorDiaryApp = () => {
   const [customWeatherFeeling, setCustomWeatherFeeling] = useState('');
   const [selectedDateEntries, setSelectedDateEntries] = useState(null);
 
+  // 33개 컬러 팔레트 (11개씩 3줄)
+  const colors = [
+    // 첫 번째 줄 (연한 색상)
+    '#FDD6D6', '#FFDAC7', '#F9F2A2', '#E0F5BA', '#B7EDB9', 
+    '#BBEAE2', '#B9EAF2', '#BCDFFF', '#D5CAF5', '#FFCBE9', '#FFFFFF',
+    // 두 번째 줄 (중간 색상)
+    '#D32929', '#F46B06', '#FFD700', '#91C249', '#33A24F', 
+    '#4EA9B1', '#3A85B8', '#2356A7', '#7445A3', '#B93984', '#B2B2B2',
+    // 세 번째 줄 (진한 색상)
+    '#7A0724', '#864F3A', '#84753C', '#5B8643', '#206340', 
+    '#256872', '#154D6F', '#0D295D', '#39155F', '#4F1040', '#000000'
+  ];
+
+  // AI 분석을 위한 헬퍼 함수들
+  const calculateColorIntensity = (color) => {
+    // 색상의 명도를 계산하여 0-100 범위로 반환
+    // 예: 연한 색상 = 높은 값, 진한 색상 = 낮은 값
+    if (colors.slice(0, 11).includes(color)) return 80; // 연한 색상
+    if (colors.slice(11, 22).includes(color)) return 50; // 중간 색상
+    if (colors.slice(22, 33).includes(color)) return 20; // 진한 색상
+    return 50;
+  };
+
+  const categorizeEmotion = (emotion) => {
+    // 감정을 카테고리로 분류
+    const positiveEmotions = ['기쁨', '사랑', '감사', '희망', '설렘', '만족', '행복', '평온'];
+    const negativeEmotions = ['슬픔', '분노', '두려움', '혐오', '절망', '외로움', '불안', '우울', '짜증', '후회'];
+    const neutralEmotions = ['놀람'];
+    
+    if (positiveEmotions.includes(emotion)) return 'positive';
+    if (negativeEmotions.includes(emotion)) return 'negative';
+    return 'neutral';
+  };
+
+  const analyzeSentiment = (emotion) => {
+    // 감정의 긍정/부정/중립 분석
+    return categorizeEmotion(emotion);
+  };
+
+  const extractKeywords = (text) => {
+    // 간단한 키워드 추출 (향후 AI로 개선 가능)
+    if (!text) return [];
+    const commonWords = ['은', '는', '이', '가', '을', '를', '에', '의', '와', '과', '그리고', '하지만', '그런데'];
+    return text.split(' ')
+      .filter(word => word.length > 2 && !commonWords.includes(word))
+      .slice(0, 5); // 최대 5개
+  };
+
   // 앱 시작 시 LocalStorage에서 데이터 로드
   useEffect(() => {
     const savedData = localStorage.getItem(STORAGE_KEY);
@@ -38,19 +86,6 @@ const ColorDiaryApp = () => {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(savedEntries));
     }
   }, [savedEntries]);
-
-  // 33개 컬러 팔레트 (11개씩 3줄)
-  const colors = [
-    // 첫 번째 줄 (연한 색상)
-    '#FDD6D6', '#FFDAC7', '#F9F2A2', '#E0F5BA', '#B7EDB9', 
-    '#BBEAE2', '#B9EAF2', '#BCDFFF', '#D5CAF5', '#FFCBE9', '#FFFFFF',
-    // 두 번째 줄 (중간 색상)
-    '#D32929', '#F46B06', '#FFD700', '#91C249', '#33A24F', 
-    '#4EA9B1', '#3A85B8', '#2356A7', '#7445A3', '#B93984', '#B2B2B2',
-    // 세 번째 줄 (진한 색상)
-    '#7A0724', '#864F3A', '#84753C', '#5B8643', '#206340', 
-    '#256872', '#154D6F', '#0D295D', '#39155F', '#4F1040', '#000000'
-  ];
 
   // 감정 리스트
   const emotions = [
@@ -109,13 +144,21 @@ const ColorDiaryApp = () => {
     const finalEmotion = diaryData.emotion === '기타' ? customEmotion : diaryData.emotion;
     const finalWeatherFeeling = diaryData.weatherFeeling === '기타' ? customWeatherFeeling : diaryData.weatherFeeling;
 
+    // AI 분석을 위한 추가 데이터 (향후 가령님 데이터 구조와 통합)
     const newEntry = {
       ...diaryData,
       emotion: finalEmotion,
       weatherFeeling: finalWeatherFeeling,
       date: today,
       timestamp: new Date().toLocaleString(),
-      id: Date.now() // 각 일기에 고유 ID 부여
+      id: Date.now(), // 각 일기에 고유 ID 부여
+      // AI 분석 데이터 구조 (향후 EmotionAPI와 연동)
+      aiAnalysis: {
+        colorIntensity: calculateColorIntensity(diaryData.color),
+        emotionCategory: categorizeEmotion(finalEmotion),
+        sentiment: analyzeSentiment(finalEmotion),
+        contextKeywords: extractKeywords(diaryData.episode)
+      }
     };
     
     const updatedEntries = [...savedEntries, newEntry];
