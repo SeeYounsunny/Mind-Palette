@@ -188,30 +188,36 @@ const ColorDiaryApp = () => {
       }
     }
     
-    // AI 분석을 위한 추가 데이터 (가령님 데이터 구조와 통합)
-    const newEntry = {
-      ...diaryData,
-      emotion: finalEmotion,
-      weatherFeeling: finalWeatherFeeling,
-      date: today,
-      timestamp: new Date().toLocaleString(),
-      id: savedEmotionData?.id || Date.now(), // 서버 ID 또는 로컬 ID
-      // AI 분석 데이터 구조
-      aiAnalysis: {
-        colorIntensity: calculateColorIntensity(diaryData.color),
-        emotionCategory: categorizeEmotion(finalEmotion),
-        sentiment: analyzeSentiment(finalEmotion),
-        contextKeywords: extractKeywords(diaryData.episode),
-        ...(USE_API && savedEmotionData?.candidates && { candidates: savedEmotionData.candidates })
+    // 구조화된 데이터로 저장 (가령님의 데이터 모델 사용)
+    try {
+      const emotionEntry = new EmotionEntry({
+        color: diaryData.color,
+        emotion: finalEmotion,
+        intensity: calculateColorIntensity(diaryData.color),
+        episode: diaryData.episode,
+        timeOfDay: diaryData.timeOfDay,
+        weather: diaryData.weather,
+        weatherFeeling: finalWeatherFeeling,
+        customEmotion: finalEmotion === '기타' ? customEmotion : '',
+        memo: diaryData.episode
+      });
+      
+      // StorageManager를 사용하여 저장
+      const saveSuccess = storageManager.saveEmotionEntry(emotionEntry);
+      
+      if (saveSuccess) {
+        // UI 업데이트를 위한 상태 업데이트
+        const allEntries = storageManager.getAllEntries();
+        setSavedEntries(allEntries);
+        alert(`오늘의 ${todayEntries.length + 1}번째 일기가 저장되었습니다!`);
+      } else {
+        alert('데이터 저장에 실패했습니다.');
       }
-    };
-    
-    const updatedEntries = [...savedEntries, newEntry];
-    setSavedEntries(updatedEntries);
-    
-    if (!USE_API) {
-      alert(`오늘의 ${todayEntries.length + 1}번째 일기가 저장되었습니다!`);
+    } catch (error) {
+      console.error('감정 기록 저장 실패:', error);
+      alert('데이터 저장 중 오류가 발생했습니다.');
     }
+    
     setCurrentPage(1);
     setDiaryData({
       color: '',
