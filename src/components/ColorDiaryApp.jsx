@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronRight, ChevronLeft, Calendar, Save, Eye } from 'lucide-react';
 import * as api from '../services/api'; // 가령님의 API 서비스
+import { storageManager } from '../data/storageManager.js';
+import { EmotionEntry } from '../data/dataModels.js';
 
-const STORAGE_KEY = 'mindPaletteEntries'; // LocalStorage 키
+const STORAGE_KEY = 'mind-palette-data'; // LocalStorage 키
 const USE_API = false; // API 사용 여부 (가령님 백엔드 준비되면 true로 변경)
 
 const ColorDiaryApp = () => {
