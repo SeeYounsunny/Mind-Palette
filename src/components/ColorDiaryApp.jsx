@@ -134,7 +134,7 @@ const ColorDiaryApp = () => {
     }
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const today = new Date().toISOString().split('T')[0];
     const todayEntries = savedEntries.filter(entry => entry.date === today);
     
