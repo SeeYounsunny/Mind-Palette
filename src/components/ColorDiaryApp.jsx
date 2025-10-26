@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChevronRight, ChevronLeft, Calendar, Save, Eye } from 'lucide-react';
+
+const STORAGE_KEY = 'mindPaletteEntries'; // LocalStorage 키
 
 const ColorDiaryApp = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -16,6 +18,26 @@ const ColorDiaryApp = () => {
   const [customEmotion, setCustomEmotion] = useState('');
   const [customWeatherFeeling, setCustomWeatherFeeling] = useState('');
   const [selectedDateEntries, setSelectedDateEntries] = useState(null);
+
+  // 앱 시작 시 LocalStorage에서 데이터 로드
+  useEffect(() => {
+    const savedData = localStorage.getItem(STORAGE_KEY);
+    if (savedData) {
+      try {
+        const parsedData = JSON.parse(savedData);
+        setSavedEntries(parsedData);
+      } catch (error) {
+        console.error('Failed to load saved data:', error);
+      }
+    }
+  }, []);
+
+  // savedEntries가 변경될 때마다 LocalStorage에 저장
+  useEffect(() => {
+    if (savedEntries.length > 0) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(savedEntries));
+    }
+  }, [savedEntries]);
 
   // 33개 컬러 팔레트 (11개씩 3줄)
   const colors = [
