@@ -1,0 +1,23 @@
+{
+  "name": "mind-palette",
+  "version": "1.0.0",
+  "description": "A creative and intuitive project for organizing thoughts and ideas",
+  "main": "index.js",
+  "scripts": {
+    "dev": "echo 'Development server starting...'",
+    "build": "echo 'Building project...'",
+    "start": "echo 'Starting project...'"
+  },
+  "keywords": [
+    "mind",
+    "palette",
+    "creativity",
+    "organization"
+  ],
+  "author": "SeeYounsunny",
+  "license": "MIT",
+  "devDependencies": {
+    "prettier": "^3.0.0",
+    "eslint": "^8.0.0"
+  }
+}
