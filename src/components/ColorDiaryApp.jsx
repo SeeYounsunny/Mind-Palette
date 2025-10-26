@@ -72,13 +72,17 @@ const ColorDiaryApp = () => {
   // 앱 시작 시 LocalStorage에서 데이터 로드
   useEffect(() => {
     const savedData = localStorage.getItem(STORAGE_KEY);
+    console.log('Loading from LocalStorage:', savedData);
     if (savedData) {
       try {
         const parsedData = JSON.parse(savedData);
+        console.log('Parsed entries:', parsedData);
         setSavedEntries(parsedData);
       } catch (error) {
         console.error('Failed to load saved data:', error);
       }
+    } else {
+      console.log('No saved data found in LocalStorage');
     }
   }, []);
 
@@ -86,6 +90,7 @@ const ColorDiaryApp = () => {
   useEffect(() => {
     if (savedEntries.length > 0) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(savedEntries));
+      console.log('Saved to LocalStorage:', savedEntries);
     }
   }, [savedEntries]);
 
