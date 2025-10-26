@@ -1,0 +1,113 @@
+# Claude Code PPT 생성 프롬프트
+
+## 기본 프롬프트
+```
+Create a professional 5-slide PowerPoint presentation for "Mind Palette" based on the content in presentation_input.txt. 
+
+Requirements:
+- Modern, clean design with gradient colors (#667eea to #764ba2)
+- Each slide should be visually appealing with appropriate icons and graphics
+- Use consistent typography and layout
+- Include bullet points and key visual elements
+- Make it suitable for a 5-minute pitch presentation
+- Export as PowerPoint (.pptx) format
+
+Slide structure:
+1. Intro - Project introduction and team
+2. Problem - Current challenges in creative thinking
+3. Solution - Mind Palette features and technology
+4. Demo - Live demonstration scenario
+5. Value - User and business value proposition
+
+Please read the detailed content from presentation_input.txt and create the presentation accordingly.
+```
+
+## 상세 프롬프트 (더 구체적인 요청)
+```
+I need you to create a professional PowerPoint presentation for "Mind Palette" project. 
+
+Please follow these specifications:
+
+**Design Requirements:**
+- Use a modern, minimalist design
+- Primary color: #667eea (gradient start)
+- Secondary color: #764ba2 (gradient end)
+- Background: White with subtle gradients
+- Typography: Clean, professional fonts
+- Layout: Mobile-first responsive design principles
+
+**Content Structure:**
+1. **Slide 1 - Introduction**
+   - Title: "Mind Palette - 창의적 사고 정리 플랫폼"
+   - Subtitle: "AI와 함께하는 직관적인 아이디어 관리 시스템"
+   - Team introduction (5 members)
+   - Development timeline (7 days)
+   - Key visual: Project logo/icon
+
+2. **Slide 2 - Problem Statement**
+   - Title: "창의적 사고의 혼재와 정리 어려움"
+   - Current pain points (4 bullet points)
+   - Target users
+   - Visual: Problem illustration/diagram
+
+3. **Slide 3 - Solution**
+   - Title: "Mind Palette - AI 기반 사고 정리 솔루션"
+   - Core features (4-5 bullet points)
+   - Technical features
+   - Differentiation points
+   - Visual: Platform UI/UX mockup
+
+4. **Slide 4 - Demo**
+   - Title: "Mind Palette 실제 사용 시연"
+   - Demo scenario (5 steps)
+   - Technical demo points
+   - Visual: Screen recording mockup
+
+5. **Slide 5 - Value Proposition**
+   - Title: "Mind Palette가 만들어내는 가치"
+   - User value (4 bullet points)
+   - Business value
+   - Technical achievements
+   - Future roadmap
+   - Visual: Value matrix/chart
+
+**Technical Requirements:**
+- Export as .pptx format
+- High resolution (1920x1080 or higher)
+- Consistent slide transitions
+- Professional animations (subtle)
+- Print-friendly design
+
+Please create this presentation and save it as "Mind_Palette_Presentation.pptx" in the presentation folder.
+```
+
+## 간단한 프롬프트 (빠른 생성용)
+```
+Create a 5-slide PowerPoint presentation for "Mind Palette" project:
+
+1. Intro slide with project title, team info, and timeline
+2. Problem slide showing current challenges in creative thinking
+3. Solution slide highlighting AI-based features and technology
+4. Demo slide with usage scenario and technical demonstration
+5. Value slide with user benefits and business impact
+
+Use modern design with blue-purple gradient (#667eea to #764ba2), clean typography, and professional layout. Include relevant icons and visual elements. Export as .pptx format.
+
+Reference the detailed content in presentation_input.txt for specific information.
+```
+
+## 사용 방법
+1. Claude Code에 위 프롬프트 중 하나를 복사
+2. presentation_input.txt 파일을 함께 제공
+3. PPT 생성 요청
+4. 생성된 파일을 presentation 폴더에 저장
+
+## 추가 요청 예시
+```
+After creating the basic presentation, please also:
+- Add speaker notes for each slide
+- Create a separate handout version
+- Generate a presentation outline document
+- Add transition effects between slides
+- Include a title slide and conclusion slide
+```
