@@ -4,6 +4,17 @@ import { BarChart3, TrendingUp, Download, Share2 } from 'lucide-react';
 const EmotionPaletteAnalysis = ({ savedEntries, onClose }) => {
   const [selectedPeriod, setSelectedPeriod] = useState('1month');
 
+  // 헬퍼 함수들
+  const getMostFrequent = (arr) => {
+    const frequency = {};
+    arr.forEach(item => {
+      frequency[item] = (frequency[item] || 0) + 1;
+    });
+    return Object.keys(frequency).reduce((a, b) => 
+      frequency[a] > frequency[b] ? a : b
+    );
+  };
+
   // 기간별 데이터 분석
   const analysisData = useMemo(() => {
     if (!savedEntries.length) return null;
@@ -107,16 +118,6 @@ const EmotionPaletteAnalysis = ({ savedEntries, onClose }) => {
       period: selectedPeriod
     };
   }, [savedEntries, selectedPeriod]);
-
-  const getMostFrequent = (arr) => {
-    const frequency = {};
-    arr.forEach(item => {
-      frequency[item] = (frequency[item] || 0) + 1;
-    });
-    return Object.keys(frequency).reduce((a, b) =>
-      frequency[a] > frequency[b] ? a : b
-    );
-  };
 
   const generateInsight = () => {
     if (!analysisData) return "아직 충분한 데이터가 없습니다.";
