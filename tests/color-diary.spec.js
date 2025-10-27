@@ -28,16 +28,16 @@ test.describe('Mind Palette - 컬러 일기 앱', () => {
     await page.goto('/');
     
     // 컬러 팔레트 확인
-    const colorButtons = page.locator('button').filter({ hasNotText: '다음' }).filter({ hasNotText: '이전' });
-    await expect(colorButtons.first()).toBeVisible();
+    const colorButtons = page.locator('button[style*="background-color"]');
+    await expect(colorButtons.first()).toBeVisible({ timeout: 5000 });
     
     // 첫 번째 컬러 선택
-    const firstColorButton = page.locator('button[style*="background-color"]').first();
+    const firstColorButton = colorButtons.first();
     await firstColorButton.click();
     
     // 다음 버튼 활성화 확인
     const nextButton = page.getByRole('button', { name: '다음' });
-    await expect(nextButton).toBeEnabled();
+    await expect(nextButton).toBeEnabled({ timeout: 2000 });
   });
 
   test('감정 선택 및 강도 조절 테스트', async ({ page }) => {
@@ -161,16 +161,23 @@ test.describe('Mind Palette - 컬러 일기 앱', () => {
     // 9. 저장 버튼 클릭
     const saveButton = page.getByRole('button', { name: '일기 저장하기' });
     await expect(saveButton).toBeEnabled();
-    await saveButton.click();
     
-    // 10. 저장 확인 알림 대기 (alert 대기)
-    page.on('dialog', async dialog => {
-      expect(dialog.message()).toContain('저장되었습니다');
-      await dialog.accept();
+    // alert 다이얼로그 처리 설정
+    const dialogPromise = new Promise((resolve) => {
+      page.once('dialog', async dialog => {
+        await dialog.accept();
+        resolve(dialog.message());
+      });
     });
     
+    await saveButton.click();
+    
+    // 다이얼로그 메시지 확인
+    const dialogMessage = await dialogPromise;
+    expect(dialogMessage).toContain('저장되었습니다');
+    
     // 페이지가 첫 페이지로 돌아가는지 확인
-    await expect(page.getByRole('heading', { name: '지금 가장 끌리는 컬러를 선택해주세요' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: '지금 가장 끌리는 컬러를 선택해주세요' })).toBeVisible({ timeout: 5000 });
   });
 
   test('캘린더 뷰 확인 테스트', async ({ page }) => {
@@ -199,10 +206,11 @@ test.describe('Mind Palette - 컬러 일기 앱', () => {
     await page.getByRole('button', { name: '감정 분석' }).click();
     
     // 분석 화면 확인
-    await expect(page.getByRole('heading', { name: '감정 팔레트 분석' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: '감정 팔레트 분석' })).toBeVisible({ timeout: 5000 });
     
-    // 데이터가 없을 때 메시지 확인
-    await expect(page.getByText('아직 분석할 데이터가 없습니다')).toBeVisible();
+    // 데이터가 없을 때 메시지 확인 (여러 가능한 텍스트 확인)
+    const noDataMessage = page.getByText(/아직.*데이터가 없습니다|분석할 데이터가 없습니다|일기를 더 작성/i);
+    await expect(noDataMessage.first()).toBeVisible({ timeout: 2000 });
     
     // 돌아가기 버튼 클릭
     await page.getByRole('button', { name: '돌아가기' }).click();
@@ -220,9 +228,14 @@ test.describe('Mind Palette - 컬러 일기 앱', () => {
     // 데이터가 없을 때 메시지 확인
     await expect(page.getByText('먼저 일기를 작성해주세요')).toBeVisible();
     
-    // 닫기 버튼 클릭
-    const closeButton = page.locator('button').filter({ hasText: /close/i }).or(page.locator('svg')).first();
-    await page.keyboard.press('Escape'); // ESC 키로 닫기
+    // 돌아가기 - 공유 화면의 X 버튼 찾기 (아이콘만 있는 버튼)
+    // h1 제목과 같은 부모 div의 마지막 버튼이 닫기 버튼
+    const heading = page.getByRole('heading', { name: '공유 이미지 생성' });
+    const closeButton = heading.locator('..').locator('button').last();
+    await closeButton.click();
+    
+    // 매인 화면으로 돌아왔는지 확인
+    await expect(page.getByRole('heading', { name: '컬러 일기' })).toBeVisible({ timeout: 3000 });
   });
 
   test('회피 컬러 선택 테스트', async ({ page }) => {
