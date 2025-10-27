@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronRight, ChevronLeft, Calendar, Save, Eye } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Calendar, Save, Eye, BarChart3, Share2 } from 'lucide-react';
 import * as api from '../services/api'; // 가령님의 API 서비스
 import { storageManager } from '../data/storageManager.js';
 import { EmotionEntry } from '../data/dataModels.js';
+import EmotionPaletteAnalysis from './EmotionPaletteAnalysis.jsx';
+import ShareImageGenerator from './ShareImageGenerator.jsx';
 
 const STORAGE_KEY = 'mind-palette-data'; // LocalStorage 키
 const USE_API = false; // API 사용 여부 (가령님 백엔드 준비되면 true로 변경)
@@ -133,9 +135,15 @@ const ColorDiaryApp = () => {
     '추위 🥶': ['움츠러듦', '따뜻함그리움', '상쾌함', '우울함', '깔끔함', '고독함', '기타']
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (currentPage < 7) {
       setCurrentPage(currentPage + 1);
+    } else if (currentPage === 7) {
+      // 페이지 7(날씨 선택)에서 다음을 누르면 페이지 8로 이동
+      // 단, 날씨가 선택되어 있어야 함
+      if (diaryData.weather) {
+        setCurrentPage(8);
+      }
     }
   };
 
@@ -215,9 +223,17 @@ const ColorDiaryApp = () => {
       const saveSuccess = storageManager.saveEmotionEntry(emotionEntry);
       
       if (saveSuccess) {
-        // UI 업데이트를 위한 상태 업데이트
-        const allEntries = storageManager.getAllEntries();
-        setSavedEntries(allEntries);
+        // UI 업데이트를 위한 상태 업데이트 - LocalStorage에서 직접 읽어옴
+        const savedData = localStorage.getItem(STORAGE_KEY);
+        if (savedData) {
+          try {
+            const parsedData = JSON.parse(savedData);
+            setSavedEntries(parsedData);
+            console.log('저장 후 데이터 로드:', parsedData);
+          } catch (error) {
+            console.error('데이터 로드 실패:', error);
+          }
+        }
         alert(`오늘의 ${todayEntries.length + 1}번째 일기가 저장되었습니다!`);
       } else {
         alert('데이터 저장에 실패했습니다.');
