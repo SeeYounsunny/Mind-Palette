@@ -240,8 +240,8 @@ const EmotionPaletteAnalysis = ({ savedEntries, onClose }) => {
               key={period.value}
               onClick={() => setSelectedPeriod(period.value)}
               className={`px-4 py-2 rounded-lg border-2 transition-all duration-200 ${selectedPeriod === period.value
-                  ? 'border-blue-500 bg-blue-50 text-blue-700'
-                  : 'border-gray-200 hover:border-gray-400 hover:bg-gray-50'
+                ? 'border-blue-500 bg-blue-50 text-blue-700'
+                : 'border-gray-200 hover:border-gray-400 hover:bg-gray-50'
                 }`}
             >
               {period.label}

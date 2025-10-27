@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronRight, ChevronLeft, Calendar, Save, Eye } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Calendar, Save, Eye, BarChart3, Share2 } from 'lucide-react';
 import * as api from '../services/api'; // 가령님의 API 서비스
 import { storageManager } from '../data/storageManager.js';
 import { EmotionEntry } from '../data/dataModels.js';
@@ -55,7 +55,7 @@ const ColorDiaryApp = () => {
     const positiveEmotions = ['기쁨', '사랑', '감사', '희망', '설렘', '만족', '행복', '평온'];
     const negativeEmotions = ['슬픔', '분노', '두려움', '혐오', '절망', '외로움', '불안', '우울', '짜증', '후회'];
     const neutralEmotions = ['놀람'];
-    
+
     if (positiveEmotions.includes(emotion)) return 'positive';
     if (negativeEmotions.includes(emotion)) return 'negative';
     return 'neutral';
@@ -134,7 +134,7 @@ const ColorDiaryApp = () => {
   };
 
   const handleNext = () => {
-    if (currentPage < 7) {
+    if (currentPage < 8) {
       setCurrentPage(currentPage + 1);
     }
   };
@@ -159,7 +159,7 @@ const ColorDiaryApp = () => {
 
     // API를 사용하는 경우 가령님의 AI 서비스 연동
     let savedEmotionData;
-    
+
     if (USE_API) {
       try {
         // AI 색상 분석 (가령님 API 호출)
@@ -168,9 +168,9 @@ const ColorDiaryApp = () => {
           intensity: calculateColorIntensity(diaryData.color),
           context: diaryData.episode
         });
-        
+
         console.log('AI 색상 분석 결과:', aiAnalysis);
-        
+
         // 감정 기록 저장 (가령님 API 호출)
         savedEmotionData = await api.saveEmotionWithFallback({
           color: diaryData.color,
@@ -189,14 +189,14 @@ const ColorDiaryApp = () => {
             contextKeywords: extractKeywords(diaryData.episode)
           }
         });
-        
+
         alert(`오늘의 ${todayEntries.length + 1}번째 일기가 서버에 저장되었습니다!`);
       } catch (error) {
         console.error('API 저장 실패, LocalStorage로 대체:', error);
         alert('서버 저장 실패, 로컬에 저장되었습니다.');
       }
     }
-    
+
     // 구조화된 데이터로 저장 (가령님의 데이터 모델 사용)
     try {
       const emotionEntry = new EmotionEntry({
@@ -210,10 +210,10 @@ const ColorDiaryApp = () => {
         customEmotion: finalEmotion === '기타' ? customEmotion : '',
         memo: diaryData.episode
       });
-      
+
       // StorageManager를 사용하여 저장
       const saveSuccess = storageManager.saveEmotionEntry(emotionEntry);
-      
+
       if (saveSuccess) {
         // UI 업데이트를 위한 상태 업데이트
         const allEntries = storageManager.getAllEntries();
@@ -226,7 +226,7 @@ const ColorDiaryApp = () => {
       console.error('감정 기록 저장 실패:', error);
       alert('데이터 저장 중 오류가 발생했습니다.');
     }
-    
+
     setCurrentPage(1);
     setDiaryData({
       color: '',
@@ -728,11 +728,7 @@ const ColorDiaryApp = () => {
 
         {currentPage < 8 && (
           <button
-            onClick={() => {
-              console.log('다음 버튼 클릭됨, 현재 페이지:', currentPage);
-              console.log('diaryData:', diaryData);
-              handleNext();
-            }}
+            onClick={handleNext}
             disabled={
               (currentPage === 1 && !diaryData.color) ||
               (currentPage === 3 && (!diaryData.emotion || (diaryData.emotion === '기타' && !customEmotion.trim()))) ||
