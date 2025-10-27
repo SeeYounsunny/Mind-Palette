@@ -118,10 +118,13 @@ test.describe('Mind Palette - 컬러 일기 앱', () => {
     await expect(page.getByRole('heading', { name: '지금은 언제인가요?' })).toBeVisible();
     await page.getByRole('button', { name: /오전/ }).click();
     
-    // 날씨 선택 페이지 확인
-    await expect(page.getByRole('heading', { name: '현재 날씨는?' })).toBeVisible();
+    // 다음 버튼 클릭하여 날씨 선택 페이지로 이동
+    await page.getByRole('button', { name: '다음' }).click();
     
-    // 날씨 선택
+    // 날씨 선택 페이지 확인
+    await expect(page.getByRole('heading', { name: '현재 날씨는?' })).toBeVisible({ timeout: 5000 });
+    
+    // 날씨 선택 (이모지 포함 - 정규식으로 매칭)
     await page.getByRole('button', { name: /맑음/ }).click();
   });
 
@@ -149,9 +152,14 @@ test.describe('Mind Palette - 컬러 일기 앱', () => {
     await page.getByRole('button', { name: '다음' }).click();
     
     // 6. 시간대 선택
+    await expect(page.getByRole('heading', { name: '지금은 언제인가요?' })).toBeVisible();
     await page.getByRole('button', { name: /오전/ }).click();
     
-    // 7. 날씨 선택
+    // 다음 버튼 클릭하여 날씨 선택 페이지로 이동
+    await page.getByRole('button', { name: '다음' }).click();
+    
+    // 7. 날씨 선택 (이모지 포함 - 정규식으로 매칭)
+    await expect(page.getByRole('heading', { name: '현재 날씨는?' })).toBeVisible({ timeout: 5000 });
     await page.getByRole('button', { name: /맑음/ }).click();
     
     // 8. 날씨 느낌 선택
