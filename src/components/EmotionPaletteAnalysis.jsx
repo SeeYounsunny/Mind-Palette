@@ -187,7 +187,7 @@ const EmotionPaletteAnalysis = ({ savedEntries, onClose }) => {
           <h1 className="text-2xl font-bold text-gray-800">감정 팔레트 분석</h1>
           <button
             onClick={onClose}
-            className="text-blue-500 hover:text-blue-700"
+            className="px-4 py-2 text-blue-600 hover:text-blue-800 border border-blue-300 rounded-lg hover:bg-blue-50"
           >
             돌아가기
           </button>
@@ -222,7 +222,7 @@ const EmotionPaletteAnalysis = ({ savedEntries, onClose }) => {
           </button>
           <button
             onClick={onClose}
-            className="text-blue-500 hover:text-blue-700"
+            className="px-4 py-2 text-blue-600 hover:text-blue-800 border border-blue-300 rounded-lg hover:bg-blue-50"
           >
             돌아가기
           </button>

@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Download, Share2, Image as ImageIcon, X } from 'lucide-react';
+import { Download, Share2, Image as ImageIcon } from 'lucide-react';
 
 const ShareImageGenerator = ({ savedEntries, onClose }) => {
   const canvasRef = useRef(null);
@@ -188,9 +188,9 @@ const ShareImageGenerator = ({ savedEntries, onClose }) => {
         <h1 className="text-2xl font-bold text-gray-800">공유 이미지 생성</h1>
         <button
           onClick={onClose}
-          className="text-gray-500 hover:text-gray-700"
+          className="px-4 py-2 text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg hover:bg-gray-50"
         >
-          <X size={24} />
+          돌아가기
         </button>
       </div>
 

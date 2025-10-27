@@ -3,8 +3,8 @@ import { ChevronRight, ChevronLeft, Calendar, Save, Eye, BarChart3, Share2 } fro
 import * as api from '../services/api'; // 가령님의 API 서비스
 import { storageManager } from '../data/storageManager.js';
 import { EmotionEntry } from '../data/dataModels.js';
-import EmotionPaletteAnalysis from './EmotionPaletteAnalysis';
-import ShareImageGenerator from './ShareImageGenerator';
+import EmotionPaletteAnalysis from './EmotionPaletteAnalysis.jsx';
+import ShareImageGenerator from './ShareImageGenerator.jsx';
 
 const STORAGE_KEY = 'mind-palette-data'; // LocalStorage 키
 const USE_API = false; // API 사용 여부 (가령님 백엔드 준비되면 true로 변경)
@@ -57,7 +57,7 @@ const ColorDiaryApp = () => {
     const positiveEmotions = ['기쁨', '사랑', '감사', '희망', '설렘', '만족', '행복', '평온'];
     const negativeEmotions = ['슬픔', '분노', '두려움', '혐오', '절망', '외로움', '불안', '우울', '짜증', '후회'];
     const neutralEmotions = ['놀람'];
-
+    
     if (positiveEmotions.includes(emotion)) return 'positive';
     if (negativeEmotions.includes(emotion)) return 'negative';
     return 'neutral';
@@ -102,11 +102,10 @@ const ColorDiaryApp = () => {
     }
   }, [savedEntries]);
 
-  // 감정 리스트
+  // 감정 리스트 (수정: 12개로 변경)
   const emotions = [
-    '기쁨', '슬픔', '분노', '두려움', '놀람', '혐오', '사랑',
-    '감사', '희망', '절망', '외로움', '평온', '불안', '행복',
-    '우울', '짜증', '설렘', '후회', '부러움', '만족', '기타'
+    '기쁘다', '행복하다', '즐겁다', '뿌듯하다', '평온하다',
+    '피곤하다', '화난다', '슬프다', '짜증난다', '불안하다', '우울하다', '기타'
   ];
 
   // 시간대
@@ -116,28 +115,26 @@ const ColorDiaryApp = () => {
     '밤 (20:00-24:00)', '심야 (24:00-04:00)'
   ];
 
-  // 날씨 옵션
+  // 날씨 옵션 (수정: 6가지)
   const weatherOptions = [
-    '맑음 ☀️', '흐림 ☁️', '비 🌧️', '눈 ❄️', '바람 💨',
-    '안개 🌫️', '천둥번개 ⛈️', '무더위 🥵', '추위 🥶'
+    '맑다', '흐리다', '비가 온다', '바람이 분다', '눈이 온다', '기타'
   ];
 
-  // 날씨에 따른 느낌 (확장)
-  const weatherFeelings = {
-    '맑음 ☀️': ['상쾌함', '활기찬', '밝음', '따뜻함', '기분좋음', '에너지충만', '기타'],
-    '흐림 ☁️': ['차분함', '우울함', '편안함', '답답함', '몽환적', '평온함', '기타'],
-    '비 🌧️': ['차분함', '우울함', '로맨틱함', '시원함', '쓸쓸함', '깨끗함', '기타'],
-    '눈 ❄️': ['설렘', '추위', '평온함', '동화같음', '신비로움', '순수함', '기타'],
-    '바람 💨': ['시원함', '상쾌함', '불안함', '자유로움', '역동적', '시원함', '기타'],
-    '안개 🌫️': ['몽환적', '신비로움', '답답함', '차분함', '미스터리', '조용함', '기타'],
-    '천둥번개 ⛈️': ['두려움', '스릴', '웅장함', '불안함', '강렬함', '긴장감', '기타'],
-    '무더위 🥵': ['짜증', '지침', '나른함', '불쾌함', '답답함', '힘듦', '기타'],
-    '추위 🥶': ['움츠러듦', '따뜻함그리움', '상쾌함', '우울함', '깔끔함', '고독함', '기타']
-  };
+  // 날씨에 따른 느낌 (수정: 10가지)
+  const weatherFeelings = [
+    '따뜻하다', '덥다', '후덥지근하다', '건조하다', '시원하다',
+    '춥다', '서늘하다', '쌀쌀하다', '습하다', '기타'
+  ];
 
-  const handleNext = () => {
-    if (currentPage < 8) {
+  const handleNext = async () => {
+    if (currentPage < 7) {
       setCurrentPage(currentPage + 1);
+    } else if (currentPage === 7) {
+      // 페이지 7(날씨 선택)에서 다음을 누르면 페이지 8로 이동
+      // 단, 날씨가 선택되어 있어야 함
+      if (diaryData.weather) {
+        setCurrentPage(8);
+      }
     }
   };
 
@@ -161,7 +158,7 @@ const ColorDiaryApp = () => {
 
     // API를 사용하는 경우 가령님의 AI 서비스 연동
     let savedEmotionData;
-
+    
     if (USE_API) {
       try {
         // AI 색상 분석 (가령님 API 호출)
@@ -170,9 +167,9 @@ const ColorDiaryApp = () => {
           intensity: calculateColorIntensity(diaryData.color),
           context: diaryData.episode
         });
-
+        
         console.log('AI 색상 분석 결과:', aiAnalysis);
-
+        
         // 감정 기록 저장 (가령님 API 호출)
         savedEmotionData = await api.saveEmotionWithFallback({
           color: diaryData.color,
@@ -191,14 +188,14 @@ const ColorDiaryApp = () => {
             contextKeywords: extractKeywords(diaryData.episode)
           }
         });
-
+        
         alert(`오늘의 ${todayEntries.length + 1}번째 일기가 서버에 저장되었습니다!`);
       } catch (error) {
         console.error('API 저장 실패, LocalStorage로 대체:', error);
         alert('서버 저장 실패, 로컬에 저장되었습니다.');
       }
     }
-
+    
     // 구조화된 데이터로 저장 (가령님의 데이터 모델 사용)
     try {
       const emotionEntry = new EmotionEntry({
@@ -212,14 +209,22 @@ const ColorDiaryApp = () => {
         customEmotion: finalEmotion === '기타' ? customEmotion : '',
         memo: diaryData.episode
       });
-
+      
       // StorageManager를 사용하여 저장
       const saveSuccess = storageManager.saveEmotionEntry(emotionEntry);
-
+      
       if (saveSuccess) {
-        // UI 업데이트를 위한 상태 업데이트
-        const allEntries = storageManager.getAllEntries();
-        setSavedEntries(allEntries);
+        // UI 업데이트를 위한 상태 업데이트 - LocalStorage에서 직접 읽어옴
+        const savedData = localStorage.getItem(STORAGE_KEY);
+        if (savedData) {
+          try {
+            const parsedData = JSON.parse(savedData);
+            setSavedEntries(parsedData);
+            console.log('저장 후 데이터 로드:', parsedData);
+          } catch (error) {
+            console.error('데이터 로드 실패:', error);
+          }
+        }
         alert(`오늘의 ${todayEntries.length + 1}번째 일기가 저장되었습니다!`);
       } else {
         alert('데이터 저장에 실패했습니다.');
@@ -228,7 +233,7 @@ const ColorDiaryApp = () => {
       console.error('감정 기록 저장 실패:', error);
       alert('데이터 저장 중 오류가 발생했습니다.');
     }
-
+    
     setCurrentPage(1);
     setDiaryData({
       color: '',
@@ -281,13 +286,21 @@ const ColorDiaryApp = () => {
                 {colors.map((color, index) => (
                   <button
                     key={index}
-                    className={`w-12 h-12 rounded-full border transition-all duration-200 ${diaryData.color === color
-                      ? 'border-gray-800 border-3 scale-110'
-                      : color === '#FFFFFF'
-                        ? 'border-gray-300 border-2 hover:border-gray-400'
-                        : 'border-gray-200 border-2 hover:border-gray-400'
-                      }`}
-                    style={{ backgroundColor: color }}
+                    className={`w-12 h-12 rounded-full border transition-all duration-200 relative ${
+                      diaryData.color === color
+                        ? 'border-gray-800 border-4 shadow-lg ring-4 ring-blue-200 ring-opacity-50 scale-110'
+                        : color === '#FFFFFF'
+                          ? 'border-gray-300 border-2 hover:border-gray-400'
+                          : 'border-gray-200 border-2 hover:border-gray-400'
+                    }`}
+                    style={{ 
+                      backgroundColor: color,
+                      boxShadow: diaryData.color === color 
+                        ? '0 8px 16px rgba(0,0,0,0.3)' 
+                        : color === '#FFFFFF'
+                          ? '0 2px 4px rgba(0,0,0,0.1)'
+                          : 'none'
+                    }}
                     onClick={() => setDiaryData({ ...diaryData, color })}
                   />
                 ))}
@@ -306,13 +319,21 @@ const ColorDiaryApp = () => {
                 {colors.map((color, index) => (
                   <button
                     key={index}
-                    className={`w-12 h-12 rounded-full border transition-all duration-200 ${diaryData.avoidColor === color
-                      ? 'border-red-500 border-3 scale-110'
-                      : color === '#FFFFFF'
-                        ? 'border-gray-300 border-2 hover:border-gray-400'
-                        : 'border-gray-200 border-2 hover:border-gray-400'
-                      }`}
-                    style={{ backgroundColor: color }}
+                    className={`w-12 h-12 rounded-full border transition-all duration-200 relative ${
+                      diaryData.avoidColor === color
+                        ? 'border-red-500 border-4 shadow-lg ring-4 ring-red-200 ring-opacity-50 scale-110'
+                        : color === '#FFFFFF'
+                          ? 'border-gray-300 border-2 hover:border-gray-400'
+                          : 'border-gray-200 border-2 hover:border-gray-400'
+                    }`}
+                    style={{ 
+                      backgroundColor: color,
+                      boxShadow: diaryData.avoidColor === color 
+                        ? '0 8px 16px rgba(0,0,0,0.3)' 
+                        : color === '#FFFFFF'
+                          ? '0 2px 4px rgba(0,0,0,0.1)'
+                          : 'none'
+                    }}
                     onClick={() => setDiaryData({ ...diaryData, avoidColor: color })}
                   />
                 ))}
@@ -338,8 +359,8 @@ const ColorDiaryApp = () => {
                 <button
                   key={index}
                   className={`p-3 rounded-lg border-2 transition-all duration-200 ${diaryData.emotion === emotion
-                    ? 'border-blue-500 bg-blue-50 text-blue-700'
-                    : 'border-gray-200 hover:border-gray-400 hover:bg-gray-50'
+                      ? 'border-blue-500 bg-blue-50 text-blue-700'
+                      : 'border-gray-200 hover:border-gray-400 hover:bg-gray-50'
                     }`}
                   onClick={() => {
                     setDiaryData({ ...diaryData, emotion });
@@ -436,8 +457,8 @@ const ColorDiaryApp = () => {
                 <button
                   key={index}
                   className={`p-3 rounded-lg border-2 transition-all duration-200 ${diaryData.timeOfDay === time
-                    ? 'border-blue-500 bg-blue-50 text-blue-700'
-                    : 'border-gray-200 hover:border-gray-400 hover:bg-gray-50'
+                      ? 'border-blue-500 bg-blue-50 text-blue-700'
+                      : 'border-gray-200 hover:border-gray-400 hover:bg-gray-50'
                     }`}
                   onClick={() => setDiaryData({ ...diaryData, timeOfDay: time })}
                 >
@@ -457,15 +478,10 @@ const ColorDiaryApp = () => {
                 <button
                   key={index}
                   className={`p-4 rounded-lg border-2 transition-all duration-200 text-lg ${diaryData.weather === weather
-                    ? 'border-blue-500 bg-blue-50 text-blue-700'
-                    : 'border-gray-200 hover:border-gray-400 hover:bg-gray-50'
+                      ? 'border-blue-500 bg-blue-50 text-blue-700'
+                      : 'border-gray-200 hover:border-gray-400 hover:bg-gray-50'
                     }`}
-                  onClick={() => {
-                    console.log('날씨 선택됨:', weather);
-                    console.log('이전 diaryData:', diaryData);
-                    setDiaryData({ ...diaryData, weather });
-                    console.log('새로운 diaryData:', { ...diaryData, weather });
-                  }}
+                  onClick={() => setDiaryData({ ...diaryData, weather })}
                 >
                   {weather}
                 </button>
@@ -480,13 +496,13 @@ const ColorDiaryApp = () => {
             <h2 className="text-2xl font-bold mb-6 text-gray-800">이 날씨에 대한 느낌은?</h2>
             <p className="text-gray-600 mb-4">선택한 날씨: {diaryData.weather}</p>
             <div className="grid grid-cols-2 gap-3 max-w-md mx-auto mb-4">
-              {diaryData.weather && weatherFeelings[diaryData.weather] &&
-                weatherFeelings[diaryData.weather].map((feeling, index) => (
+              {diaryData.weather &&
+                weatherFeelings.map((feeling, index) => (
                   <button
                     key={index}
                     className={`p-3 rounded-lg border-2 transition-all duration-200 ${diaryData.weatherFeeling === feeling
-                      ? 'border-green-500 bg-green-50 text-green-700'
-                      : 'border-gray-200 hover:border-gray-400 hover:bg-gray-50'
+                        ? 'border-green-500 bg-green-50 text-green-700'
+                        : 'border-gray-200 hover:border-gray-400 hover:bg-gray-50'
                       }`}
                     onClick={() => {
                       setDiaryData({ ...diaryData, weatherFeeling: feeling });
@@ -635,8 +651,8 @@ const ColorDiaryApp = () => {
                         entries: dayData.entries.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
                       })}
                       className={`w-full h-full rounded-lg flex flex-col items-center justify-center text-xs font-medium relative overflow-hidden ${dayData.entries.length > 0
-                        ? 'cursor-pointer hover:opacity-80 text-white'
-                        : 'text-gray-700 hover:bg-gray-100'
+                          ? 'cursor-pointer hover:opacity-80 text-white'
+                          : 'text-gray-700 hover:bg-gray-100'
                         }`}
                       style={{
                         background: dayData.entries.length > 0
@@ -684,20 +700,14 @@ const ColorDiaryApp = () => {
             일기 보기
           </button>
           <button
-            onClick={() => {
-              console.log('감정 분석 버튼 클릭됨');
-              setShowAnalysis(true);
-            }}
+            onClick={() => setShowAnalysis(true)}
             className="flex items-center gap-2 px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600"
           >
             <BarChart3 size={16} />
             감정 분석
           </button>
           <button
-            onClick={() => {
-              console.log('공유하기 버튼 클릭됨');
-              setShowShare(true);
-            }}
+            onClick={() => setShowShare(true)}
             className="flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600"
           >
             <Share2 size={16} />
