@@ -10,7 +10,7 @@ const EmotionPaletteAnalysis = ({ savedEntries, onClose }) => {
     arr.forEach(item => {
       frequency[item] = (frequency[item] || 0) + 1;
     });
-    return Object.keys(frequency).reduce((a, b) => 
+    return Object.keys(frequency).reduce((a, b) =>
       frequency[a] > frequency[b] ? a : b
     );
   };
