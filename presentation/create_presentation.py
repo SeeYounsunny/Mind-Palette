@@ -20,7 +20,7 @@ def add_gradient_background(slide, color1, color2):
     background = slide.shapes.add_shape(
         MSO_SHAPE.RECTANGLE,
         0, 0,
-        Inches(10), Inches(7.5)
+        Inches(10), Inches(5.625)  # 16:9 와이드 형식
     )
     background.line.fill.background()
     fill = background.fill
@@ -94,8 +94,8 @@ def add_decorative_shape(slide, top, left, width, height, color):
 
 # Create presentation
 prs = Presentation()
-prs.slide_width = Inches(10)
-prs.slide_height = Inches(7.5)
+prs.slide_width = Inches(10)      # 16:9 와이드 형식
+prs.slide_height = Inches(5.625)  # 16:9 와이드 형식
 
 # Define colors
 PRIMARY_COLOR = '#667eea'
@@ -110,36 +110,36 @@ slide1_layout = prs.slide_layouts[6]  # Blank layout
 slide1 = prs.slides.add_slide(slide1_layout)
 
 add_gradient_background(slide1, '#ffffff', '#f8f9ff')
-add_decorative_shape(slide1, Inches(0.3), Inches(0.3), Inches(1.5), Inches(0.05), PRIMARY_COLOR)
-add_decorative_shape(slide1, Inches(7), Inches(9), Inches(0.4), Inches(0.4), SECONDARY_COLOR)
+add_decorative_shape(slide1, Inches(0.2), Inches(0.2), Inches(1.5), Inches(0.05), PRIMARY_COLOR)
+add_decorative_shape(slide1, Inches(4.5), Inches(8.5), Inches(0.4), Inches(0.4), SECONDARY_COLOR)
 
 # Main title
-add_title_with_style(slide1, 'Mind Palette', Inches(2), Inches(1), Inches(8), Inches(1), font_size=60, bold=True)
+add_title_with_style(slide1, 'Mind Palette', Inches(1.5), Inches(0.8), Inches(7), Inches(0.8), font_size=56, bold=True)
 
 # Subtitle
-subtitle = slide1.shapes.add_textbox(Inches(1.5), Inches(3), Inches(7), Inches(0.8))
+subtitle = slide1.shapes.add_textbox(Inches(1.5), Inches(2.1), Inches(7), Inches(0.6))
 tf = subtitle.text_frame
 p = tf.paragraphs[0]
 p.text = '색채를 통해 나를 이해하는 감정 리플렉션 도구'
 p.alignment = PP_ALIGN.CENTER
 run = p.runs[0]
-run.font.size = Pt(32)
+run.font.size = Pt(28)
 run.font.color.rgb = RGBColor(*hex_to_rgb(SECONDARY_COLOR))
 run.font.name = 'Arial'
 
 # Description
-desc = slide1.shapes.add_textbox(Inches(2), Inches(3.8), Inches(6), Inches(0.6))
+desc = slide1.shapes.add_textbox(Inches(2), Inches(2.8), Inches(6), Inches(0.5))
 tf = desc.text_frame
 p = tf.paragraphs[0]
 p.text = '33색 팔레트로 기록하는 나의 감정 여정'
 p.alignment = PP_ALIGN.CENTER
 run = p.runs[0]
-run.font.size = Pt(20)
+run.font.size = Pt(18)
 run.font.color.rgb = RGBColor(102, 102, 102)
 run.font.name = 'Arial'
 
 # Team info
-team_info = slide1.shapes.add_textbox(Inches(2.5), Inches(5), Inches(5), Inches(1.5))
+team_info = slide1.shapes.add_textbox(Inches(2.5), Inches(3.6), Inches(5), Inches(1.5))
 tf = team_info.text_frame
 tf.word_wrap = True
 
@@ -170,13 +170,13 @@ slide2_layout = prs.slide_layouts[6]
 slide2 = prs.slides.add_slide(slide2_layout)
 
 add_gradient_background(slide2, '#ffffff', '#fff8fb')
-add_decorative_shape(slide2, Inches(0.3), Inches(0.3), Inches(1.5), Inches(0.05), PRIMARY_COLOR)
+add_decorative_shape(slide2, Inches(0.2), Inches(0.2), Inches(1.5), Inches(0.05), PRIMARY_COLOR)
 
 # Title
-add_title_with_style(slide2, '감정을 기록하고 표현하는 어려움', Inches(0.5), Inches(1), Inches(8), Inches(0.8), font_size=40)
+add_title_with_style(slide2, '감정을 기록하고 표현하는 어려움', Inches(0.5), Inches(0.6), Inches(9), Inches(0.7), font_size=36)
 
 # Subtitle
-add_text_with_style(slide2, '현재의 문제점', Inches(1.5), Inches(1.5), Inches(7), Inches(0.5), font_size=24, color=SECONDARY_COLOR)
+add_text_with_style(slide2, '현재의 문제점', Inches(1.5), Inches(1.3), Inches(7), Inches(0.4), font_size=22, color=SECONDARY_COLOR)
 
 # Problem points
 problems = [
@@ -186,10 +186,10 @@ problems = [
     '🎨 자신의 감정 상태를 시각적으로 인식하고 공유할 수 있는 도구 부족'
 ]
 
-add_bullet_points(slide2, problems, Inches(2.3), Inches(1.5), Inches(7), font_size=18)
+add_bullet_points(slide2, problems, Inches(1.9), Inches(1.5), Inches(7), font_size=16)
 
 # Target users box
-target_box = slide2.shapes.add_textbox(Inches(1.5), Inches(5.5), Inches(7), Inches(1.2))
+target_box = slide2.shapes.add_textbox(Inches(1.5), Inches(4.1), Inches(7), Inches(1.0))
 tf = target_box.text_frame
 tf.word_wrap = True
 
@@ -216,13 +216,13 @@ slide3_layout = prs.slide_layouts[6]
 slide3 = prs.slides.add_slide(slide3_layout)
 
 add_gradient_background(slide3, '#ffffff', '#f8f9ff')
-add_decorative_shape(slide3, Inches(0.3), Inches(0.3), Inches(1.5), Inches(0.05), PRIMARY_COLOR)
+add_decorative_shape(slide3, Inches(0.2), Inches(0.2), Inches(1.5), Inches(0.05), PRIMARY_COLOR)
 
 # Title
-add_title_with_style(slide3, 'Mind Palette', Inches(0.5), Inches(1), Inches(8), Inches(0.6), font_size=44)
+add_title_with_style(slide3, 'Mind Palette', Inches(0.5), Inches(0.6), Inches(9), Inches(0.6), font_size=40)
 
 # Subtitle
-add_text_with_style(slide3, '컬러 기반 감정 트래킹 솔루션', Inches(1.2), Inches(1.5), Inches(7), Inches(0.5), font_size=24, color=SECONDARY_COLOR, alignment=PP_ALIGN.CENTER)
+add_text_with_style(slide3, '컬러 기반 감정 트래킹 솔루션', Inches(1.2), Inches(1.3), Inches(7), Inches(0.4), font_size=22, color=SECONDARY_COLOR, alignment=PP_ALIGN.CENTER)
 
 # Core features
 features = [
@@ -233,10 +233,10 @@ features = [
     '📸 공유용 감정 팔레트 이미지 자동 생성'
 ]
 
-add_bullet_points(slide3, features, Inches(2.2), Inches(1.5), Inches(7), font_size=17)
+add_bullet_points(slide3, features, Inches(1.8), Inches(1.5), Inches(7), font_size=15)
 
 # Key values section
-value_box = slide3.shapes.add_textbox(Inches(1.5), Inches(5), Inches(7), Inches(1.8))
+value_box = slide3.shapes.add_textbox(Inches(1.5), Inches(3.8), Inches(7), Inches(1.5))
 tf = value_box.text_frame
 tf.word_wrap = True
 
@@ -270,13 +270,13 @@ slide4_layout = prs.slide_layouts[6]
 slide4 = prs.slides.add_slide(slide4_layout)
 
 add_gradient_background(slide4, '#ffffff', '#fff8fb')
-add_decorative_shape(slide4, Inches(0.3), Inches(0.3), Inches(1.5), Inches(0.05), PRIMARY_COLOR)
+add_decorative_shape(slide4, Inches(0.2), Inches(0.2), Inches(1.5), Inches(0.05), PRIMARY_COLOR)
 
 # Title
-add_title_with_style(slide4, 'Mind Palette 사용 방법', Inches(0.5), Inches(1), Inches(8), Inches(0.7), font_size=40)
+add_title_with_style(slide4, 'Mind Palette 사용 방법', Inches(0.5), Inches(0.6), Inches(9), Inches(0.6), font_size=36)
 
 # Demo scenario
-add_text_with_style(slide4, '일기 작성 프로세스', Inches(1.5), Inches(1.5), Inches(7), Inches(0.5), font_size=24, color=SECONDARY_COLOR)
+add_text_with_style(slide4, '일기 작성 프로세스', Inches(1.5), Inches(1.3), Inches(7), Inches(0.4), font_size=22, color=SECONDARY_COLOR)
 
 demo_steps = [
     '1️⃣ 33색 팔레트에서 지금 가장 끌리는 컬러 선택',
@@ -286,10 +286,10 @@ demo_steps = [
     '5️⃣ 저장 후 캘린더에서 색상으로 확인'
 ]
 
-add_bullet_points(slide4, demo_steps, Inches(2.2), Inches(1.5), Inches(7), font_size=17)
+add_bullet_points(slide4, demo_steps, Inches(1.8), Inches(1.5), Inches(7), font_size=15)
 
 # Additional features
-features_box = slide4.shapes.add_textbox(Inches(1.5), Inches(5), Inches(7), Inches(1.8))
+features_box = slide4.shapes.add_textbox(Inches(1.5), Inches(3.8), Inches(7), Inches(1.5))
 tf = features_box.text_frame
 tf.word_wrap = True
 
@@ -323,13 +323,13 @@ slide5_layout = prs.slide_layouts[6]
 slide5 = prs.slides.add_slide(slide5_layout)
 
 add_gradient_background(slide5, '#ffffff', '#f8f9ff')
-add_decorative_shape(slide5, Inches(0.3), Inches(0.3), Inches(1.5), Inches(0.05), PRIMARY_COLOR)
+add_decorative_shape(slide5, Inches(0.2), Inches(0.2), Inches(1.5), Inches(0.05), PRIMARY_COLOR)
 
 # Title
-add_title_with_style(slide5, 'Mind Palette가 만들어내는 가치', Inches(0.5), Inches(0.8), Inches(8), Inches(0.7), font_size=38)
+add_title_with_style(slide5, 'Mind Palette가 만들어내는 가치', Inches(0.5), Inches(0.5), Inches(9), Inches(0.6), font_size=34)
 
 # User value
-user_value_box = slide5.shapes.add_textbox(Inches(0.8), Inches(1.7), Inches(4), Inches(2))
+user_value_box = slide5.shapes.add_textbox(Inches(0.8), Inches(1.3), Inches(4), Inches(1.8))
 tf = user_value_box.text_frame
 tf.word_wrap = True
 
@@ -356,7 +356,7 @@ for value in user_values:
     run.font.color.rgb = RGBColor(68, 68, 68)
 
 # Technical value
-tech_box = slide5.shapes.add_textbox(Inches(5.2), Inches(1.7), Inches(4), Inches(2))
+tech_box = slide5.shapes.add_textbox(Inches(5.2), Inches(1.3), Inches(4), Inches(1.8))
 tf = tech_box.text_frame
 tf.word_wrap = True
 
@@ -383,26 +383,26 @@ for value in tech_values:
     run.font.color.rgb = RGBColor(68, 68, 68)
 
 # Technical achievements
-achieve_box = slide5.shapes.add_textbox(Inches(0.8), Inches(4), Inches(4), Inches(1.5))
+achieve_box = slide5.shapes.add_textbox(Inches(0.8), Inches(3.3), Inches(4), Inches(1.2))
 tf = achieve_box.text_frame
 tf.word_wrap = True
 
 p = tf.paragraphs[0]
 p.text = '개발 성과'
 run = p.runs[0]
-run.font.size = Pt(18)
+run.font.size = Pt(16)
 run.font.bold = True
 run.font.color.rgb = RGBColor(*hex_to_rgb(PRIMARY_COLOR))
 
 p = tf.add_paragraph()
 p.text = '1주일 MVP 완성, React 기반 모던 UI, 감정 분석 기능 구현'
-p.space_before = Pt(6)
+p.space_before = Pt(4)
 run = p.runs[0]
-run.font.size = Pt(13)
+run.font.size = Pt(12)
 run.font.color.rgb = RGBColor(68, 68, 68)
 
 # Future roadmap
-roadmap_box = slide5.shapes.add_textbox(Inches(5.2), Inches(4), Inches(4), Inches(1.5))
+roadmap_box = slide5.shapes.add_textbox(Inches(5.2), Inches(3.3), Inches(4), Inches(1.2))
 tf = roadmap_box.text_frame
 tf.word_wrap = True
 
@@ -421,14 +421,14 @@ run.font.size = Pt(13)
 run.font.color.rgb = RGBColor(68, 68, 68)
 
 # Closing statement
-closing_box = slide5.shapes.add_textbox(Inches(1.5), Inches(6), Inches(7), Inches(0.8))
+closing_box = slide5.shapes.add_textbox(Inches(1.5), Inches(4.8), Inches(7), Inches(0.6))
 tf = closing_box.text_frame
 
 p = tf.paragraphs[0]
 p.text = '색채로 기록하는 나의 감정 여정'
 p.alignment = PP_ALIGN.CENTER
 run = p.runs[0]
-run.font.size = Pt(24)
+run.font.size = Pt(20)
 run.font.bold = True
 run.font.color.rgb = RGBColor(*hex_to_rgb(PRIMARY_COLOR))
 
@@ -436,7 +436,7 @@ p2 = tf.add_paragraph()
 p2.text = 'Mind Palette'
 p2.alignment = PP_ALIGN.CENTER
 run2 = p2.runs[0]
-run2.font.size = Pt(28)
+run2.font.size = Pt(24)
 run2.font.bold = True
 run2.font.color.rgb = RGBColor(*hex_to_rgb(SECONDARY_COLOR))
 
