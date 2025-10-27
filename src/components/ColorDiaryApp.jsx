@@ -115,24 +115,16 @@ const ColorDiaryApp = () => {
     '밤 (20:00-24:00)', '심야 (24:00-04:00)'
   ];
 
-  // 날씨 옵션
+  // 날씨 옵션 (수정: 6가지)
   const weatherOptions = [
-    '맑음 ☀️', '흐림 ☁️', '비 🌧️', '눈 ❄️', '바람 💨',
-    '안개 🌫️', '천둥번개 ⛈️', '무더위 🥵', '추위 🥶'
+    '맑다', '흐리다', '비가 온다', '바람이 분다', '눈이 온다', '기타'
   ];
 
-  // 날씨에 따른 느낌 (확장)
-  const weatherFeelings = {
-    '맑음 ☀️': ['상쾌함', '활기찬', '밝음', '따뜻함', '기분좋음', '에너지충만', '기타'],
-    '흐림 ☁️': ['차분함', '우울함', '편안함', '답답함', '몽환적', '평온함', '기타'],
-    '비 🌧️': ['차분함', '우울함', '로맨틱함', '시원함', '쓸쓸함', '깨끗함', '기타'],
-    '눈 ❄️': ['설렘', '추위', '평온함', '동화같음', '신비로움', '순수함', '기타'],
-    '바람 💨': ['시원함', '상쾌함', '불안함', '자유로움', '역동적', '시원함', '기타'],
-    '안개 🌫️': ['몽환적', '신비로움', '답답함', '차분함', '미스터리', '조용함', '기타'],
-    '천둥번개 ⛈️': ['두려움', '스릴', '웅장함', '불안함', '강렬함', '긴장감', '기타'],
-    '무더위 🥵': ['짜증', '지침', '나른함', '불쾌함', '답답함', '힘듦', '기타'],
-    '추위 🥶': ['움츠러듦', '따뜻함그리움', '상쾌함', '우울함', '깔끔함', '고독함', '기타']
-  };
+  // 날씨에 따른 느낌 (수정: 10가지)
+  const weatherFeelings = [
+    '따뜻하다', '덥다', '후덥지근하다', '건조하다', '시원하다',
+    '춥다', '서늘하다', '쌀쌀하다', '습하다', '기타'
+  ];
 
   const handleNext = async () => {
     if (currentPage < 7) {
@@ -294,13 +286,17 @@ const ColorDiaryApp = () => {
                 {colors.map((color, index) => (
                   <button
                     key={index}
-                    className={`w-12 h-12 rounded-full border transition-all duration-200 ${diaryData.color === color
-                        ? 'border-gray-800 border-3 scale-110'
+                    className={`w-12 h-12 rounded-full border transition-all duration-200 relative ${
+                      diaryData.color === color
+                        ? 'border-gray-800 border-4 shadow-lg ring-4 ring-blue-200 ring-opacity-50 scale-110'
                         : color === '#FFFFFF'
                           ? 'border-gray-300 border-2 hover:border-gray-400'
                           : 'border-gray-200 border-2 hover:border-gray-400'
-                      }`}
-                    style={{ backgroundColor: color }}
+                    }`}
+                    style={{ 
+                      backgroundColor: color,
+                      boxShadow: diaryData.color === color ? '0 8px 16px rgba(0,0,0,0.3)' : 'none'
+                    }}
                     onClick={() => setDiaryData({ ...diaryData, color })}
                   />
                 ))}
@@ -319,13 +315,17 @@ const ColorDiaryApp = () => {
                 {colors.map((color, index) => (
                   <button
                     key={index}
-                    className={`w-12 h-12 rounded-full border transition-all duration-200 ${diaryData.avoidColor === color
-                        ? 'border-red-500 border-3 scale-110'
+                    className={`w-12 h-12 rounded-full border transition-all duration-200 relative ${
+                      diaryData.avoidColor === color
+                        ? 'border-red-500 border-4 shadow-lg ring-4 ring-red-200 ring-opacity-50 scale-110'
                         : color === '#FFFFFF'
                           ? 'border-gray-300 border-2 hover:border-gray-400'
                           : 'border-gray-200 border-2 hover:border-gray-400'
-                      }`}
-                    style={{ backgroundColor: color }}
+                    }`}
+                    style={{ 
+                      backgroundColor: color,
+                      boxShadow: diaryData.avoidColor === color ? '0 8px 16px rgba(0,0,0,0.3)' : 'none'
+                    }}
                     onClick={() => setDiaryData({ ...diaryData, avoidColor: color })}
                   />
                 ))}
@@ -488,8 +488,8 @@ const ColorDiaryApp = () => {
             <h2 className="text-2xl font-bold mb-6 text-gray-800">이 날씨에 대한 느낌은?</h2>
             <p className="text-gray-600 mb-4">선택한 날씨: {diaryData.weather}</p>
             <div className="grid grid-cols-2 gap-3 max-w-md mx-auto mb-4">
-              {diaryData.weather && weatherFeelings[diaryData.weather] &&
-                weatherFeelings[diaryData.weather].map((feeling, index) => (
+              {diaryData.weather &&
+                weatherFeelings.map((feeling, index) => (
                   <button
                     key={index}
                     className={`p-3 rounded-lg border-2 transition-all duration-200 ${diaryData.weatherFeeling === feeling
