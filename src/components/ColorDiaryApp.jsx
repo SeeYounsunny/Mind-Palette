@@ -159,10 +159,10 @@ const ColorDiaryApp = () => {
                   <button
                     key={index}
                     className={`w-12 h-12 rounded-full border transition-all duration-200 ${diaryData.color === color
-                        ? 'border-gray-800 border-3 scale-110'
-                        : color === '#FFFFFF'
-                          ? 'border-gray-300 border-2 hover:border-gray-400'
-                          : 'border-gray-200 border-2 hover:border-gray-400'
+                      ? 'border-gray-800 border-3 scale-110'
+                      : color === '#FFFFFF'
+                        ? 'border-gray-300 border-2 hover:border-gray-400'
+                        : 'border-gray-200 border-2 hover:border-gray-400'
                       }`}
                     style={{ backgroundColor: color }}
                     onClick={() => setDiaryData({ ...diaryData, color })}
@@ -184,10 +184,10 @@ const ColorDiaryApp = () => {
                   <button
                     key={index}
                     className={`w-12 h-12 rounded-full border transition-all duration-200 ${diaryData.avoidColor === color
-                        ? 'border-red-500 border-3 scale-110'
-                        : color === '#FFFFFF'
-                          ? 'border-gray-300 border-2 hover:border-gray-400'
-                          : 'border-gray-200 border-2 hover:border-gray-400'
+                      ? 'border-red-500 border-3 scale-110'
+                      : color === '#FFFFFF'
+                        ? 'border-gray-300 border-2 hover:border-gray-400'
+                        : 'border-gray-200 border-2 hover:border-gray-400'
                       }`}
                     style={{ backgroundColor: color }}
                     onClick={() => setDiaryData({ ...diaryData, avoidColor: color })}
@@ -215,8 +215,8 @@ const ColorDiaryApp = () => {
                 <button
                   key={index}
                   className={`p-3 rounded-lg border-2 transition-all duration-200 ${diaryData.emotion === emotion
-                      ? 'border-blue-500 bg-blue-50 text-blue-700'
-                      : 'border-gray-200 hover:border-gray-400 hover:bg-gray-50'
+                    ? 'border-blue-500 bg-blue-50 text-blue-700'
+                    : 'border-gray-200 hover:border-gray-400 hover:bg-gray-50'
                     }`}
                   onClick={() => {
                     setDiaryData({ ...diaryData, emotion });
@@ -313,8 +313,8 @@ const ColorDiaryApp = () => {
                 <button
                   key={index}
                   className={`p-3 rounded-lg border-2 transition-all duration-200 ${diaryData.timeOfDay === time
-                      ? 'border-blue-500 bg-blue-50 text-blue-700'
-                      : 'border-gray-200 hover:border-gray-400 hover:bg-gray-50'
+                    ? 'border-blue-500 bg-blue-50 text-blue-700'
+                    : 'border-gray-200 hover:border-gray-400 hover:bg-gray-50'
                     }`}
                   onClick={() => setDiaryData({ ...diaryData, timeOfDay: time })}
                 >
@@ -334,10 +334,15 @@ const ColorDiaryApp = () => {
                 <button
                   key={index}
                   className={`p-4 rounded-lg border-2 transition-all duration-200 text-lg ${diaryData.weather === weather
-                      ? 'border-blue-500 bg-blue-50 text-blue-700'
-                      : 'border-gray-200 hover:border-gray-400 hover:bg-gray-50'
+                    ? 'border-blue-500 bg-blue-50 text-blue-700'
+                    : 'border-gray-200 hover:border-gray-400 hover:bg-gray-50'
                     }`}
-                  onClick={() => setDiaryData({ ...diaryData, weather })}
+                  onClick={() => {
+                    console.log('날씨 선택됨:', weather);
+                    console.log('이전 diaryData:', diaryData);
+                    setDiaryData({ ...diaryData, weather });
+                    console.log('새로운 diaryData:', { ...diaryData, weather });
+                  }}
                 >
                   {weather}
                 </button>
@@ -357,8 +362,8 @@ const ColorDiaryApp = () => {
                   <button
                     key={index}
                     className={`p-3 rounded-lg border-2 transition-all duration-200 ${diaryData.weatherFeeling === feeling
-                        ? 'border-green-500 bg-green-50 text-green-700'
-                        : 'border-gray-200 hover:border-gray-400 hover:bg-gray-50'
+                      ? 'border-green-500 bg-green-50 text-green-700'
+                      : 'border-gray-200 hover:border-gray-400 hover:bg-gray-50'
                       }`}
                     onClick={() => {
                       setDiaryData({ ...diaryData, weatherFeeling: feeling });
@@ -507,8 +512,8 @@ const ColorDiaryApp = () => {
                         entries: dayData.entries.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
                       })}
                       className={`w-full h-full rounded-lg flex flex-col items-center justify-center text-xs font-medium relative overflow-hidden ${dayData.entries.length > 0
-                          ? 'cursor-pointer hover:opacity-80 text-white'
-                          : 'text-gray-700 hover:bg-gray-100'
+                        ? 'cursor-pointer hover:opacity-80 text-white'
+                        : 'text-gray-700 hover:bg-gray-100'
                         }`}
                       style={{
                         background: dayData.entries.length > 0
@@ -602,7 +607,11 @@ const ColorDiaryApp = () => {
 
         {currentPage < 8 && (
           <button
-            onClick={handleNext}
+            onClick={() => {
+              console.log('다음 버튼 클릭됨, 현재 페이지:', currentPage);
+              console.log('diaryData:', diaryData);
+              handleNext();
+            }}
             disabled={
               (currentPage === 1 && !diaryData.color) ||
               (currentPage === 3 && (!diaryData.emotion || (diaryData.emotion === '기타' && !customEmotion.trim()))) ||
