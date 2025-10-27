@@ -3,6 +3,8 @@ import { ChevronRight, ChevronLeft, Calendar, Save, Eye, BarChart3, Share2 } fro
 import * as api from '../services/api'; // 가령님의 API 서비스
 import { storageManager } from '../data/storageManager.js';
 import { EmotionEntry } from '../data/dataModels.js';
+import EmotionPaletteAnalysis from './EmotionPaletteAnalysis';
+import ShareImageGenerator from './ShareImageGenerator';
 
 const STORAGE_KEY = 'mind-palette-data'; // LocalStorage 키
 const USE_API = false; // API 사용 여부 (가령님 백엔드 준비되면 true로 변경)
@@ -682,14 +684,20 @@ const ColorDiaryApp = () => {
             일기 보기
           </button>
           <button
-            onClick={() => setShowAnalysis(true)}
+            onClick={() => {
+              console.log('감정 분석 버튼 클릭됨');
+              setShowAnalysis(true);
+            }}
             className="flex items-center gap-2 px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600"
           >
             <BarChart3 size={16} />
             감정 분석
           </button>
           <button
-            onClick={() => setShowShare(true)}
+            onClick={() => {
+              console.log('공유하기 버튼 클릭됨');
+              setShowShare(true);
+            }}
             className="flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600"
           >
             <Share2 size={16} />
