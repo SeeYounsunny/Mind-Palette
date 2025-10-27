@@ -295,7 +295,11 @@ const ColorDiaryApp = () => {
                     }`}
                     style={{ 
                       backgroundColor: color,
-                      boxShadow: diaryData.color === color ? '0 8px 16px rgba(0,0,0,0.3)' : 'none'
+                      boxShadow: diaryData.color === color 
+                        ? '0 8px 16px rgba(0,0,0,0.3)' 
+                        : color === '#FFFFFF'
+                          ? '0 2px 4px rgba(0,0,0,0.1)'
+                          : 'none'
                     }}
                     onClick={() => setDiaryData({ ...diaryData, color })}
                   />
@@ -324,7 +328,11 @@ const ColorDiaryApp = () => {
                     }`}
                     style={{ 
                       backgroundColor: color,
-                      boxShadow: diaryData.avoidColor === color ? '0 8px 16px rgba(0,0,0,0.3)' : 'none'
+                      boxShadow: diaryData.avoidColor === color 
+                        ? '0 8px 16px rgba(0,0,0,0.3)' 
+                        : color === '#FFFFFF'
+                          ? '0 2px 4px rgba(0,0,0,0.1)'
+                          : 'none'
                     }}
                     onClick={() => setDiaryData({ ...diaryData, avoidColor: color })}
                   />
