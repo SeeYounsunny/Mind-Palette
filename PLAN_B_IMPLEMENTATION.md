@@ -148,6 +148,8 @@
 - **카드**: 반투명 흰색 배경 + blur 효과
 - **버튼**: 둥근 모서리, 부드러운 그림자
 - **타이포그래피**: 나눔고딕 폰트 사용
+- **타이포그래피**: 나눔고딕 우선 + 시스템 폰트 폴백
+  - 폰트 스택: 'Nanum Gothic', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif
 
 ---
 
@@ -165,6 +167,22 @@
 - **Vite**: 개발 환경 및 빌드 도구
 - **Lucide React**: 아이콘 라이브러리
 - **CSS**: 커스텀 스타일 (Tailwind 유틸리티 클래스 스타일)
+
+---
+
+## ✅ 합의된 사항
+
+- 폰트: 나눔고딕 우선 + 시스템 기본 폰트 폴백 사용
+- 아이콘: `Lucide React` 사용 확정
+- 시각 회귀: 간단한 이미지 비교만 수행(페이지/주요 컴포넌트 스냅샷)
+
+---
+
+## 🧪 테스트/검증
+
+- 시각 회귀: 간단한 이미지 비교 기반으로 UI 변화를 확인합니다.
+  - 페이지/핵심 컴포넌트 스냅샷 캡처 후 이미지 diff로 비교
+  - Storybook 설정은 생략하며, 개발 서버 기준 캡처로 진행
 
 ---
 
@@ -256,4 +274,3 @@ npm run dev
 ---
 
 **플랜B는 피그마 디자인을 기반으로 한 완전히 새로운 UI/UX를 제공합니다.**
-

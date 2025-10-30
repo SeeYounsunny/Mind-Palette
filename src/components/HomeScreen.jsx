@@ -134,9 +134,28 @@ const HomeScreen = () => {
     return days;
   };
 
+  // 이 달 최다 감정 Top5 (횟수는 표시하지 않음)
+  const getTopEmotionsForCurrentMonth = () => {
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+    const prefix = `${year}-${month}`;
+    const counts = {};
+    savedEntries.forEach((e) => {
+      if (e.date?.startsWith(prefix) && e.emotion) {
+        counts[e.emotion] = (counts[e.emotion] || 0) + 1;
+      }
+    });
+    const sorted = Object.entries(counts)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5)
+      .map(([emotion]) => emotion);
+    return sorted;
+  };
+
   const consecutiveDays = calculateConsecutiveDays();
   const weeklySummary = getWeeklySummary();
   const calendarDays = generateCalendar();
+  const topEmotions = getTopEmotionsForCurrentMonth();
 
   const monthName = currentDate.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long' });
 
@@ -222,6 +241,18 @@ const HomeScreen = () => {
           ))}
         </div>
       </div>
+
+      {/* 이 달의 감정 키워드 */}
+      {topEmotions.length > 0 && (
+        <div className="monthly-top-emotions">
+          <div className="monthly-title">이 달의 감정</div>
+          <div className="monthly-tags">
+            {topEmotions.map((emo, idx) => (
+              <span key={idx} className="emotion-tag">{emo}</span>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
+import GradientColorPicker from './GradientColorPicker.jsx';
 import { storageManager } from '../data/storageManager.js';
 import { EmotionEntry } from '../data/dataModels.js';
 
@@ -170,31 +171,21 @@ const DiaryWriteScreen = ({ onClose }) => {
             {/* 첫 번째 색상 선택 */}
             <div className="diary-color-section">
               <h3 className="diary-color-title">지금 마음에 끌리는 색 하나를 선택해주세요.</h3>
-              <div className="diary-color-grid">
-                {colors.map((color, index) => (
-                  <button
-                    key={index}
-                    className={`diary-color-btn ${diaryData.color === color ? 'selected' : ''}`}
-                    style={{ backgroundColor: color }}
-                    onClick={() => setDiaryData({ ...diaryData, color })}
-                  />
-                ))}
-              </div>
+              <GradientColorPicker
+                value={diaryData.color}
+                onChange={(hex) => setDiaryData({ ...diaryData, color: hex })}
+                height={140}
+              />
             </div>
 
             {/* 두 번째 색상 선택 */}
             <div className="diary-color-section">
               <h3 className="diary-color-title">지금 마음에서 덜어내고 싶은 색 하나를 선택해주세요.</h3>
-              <div className="diary-color-grid">
-                {colors.map((color, index) => (
-                  <button
-                    key={index}
-                    className={`diary-color-btn ${diaryData.avoidColor === color ? 'selected' : ''}`}
-                    style={{ backgroundColor: color }}
-                    onClick={() => setDiaryData({ ...diaryData, avoidColor: color || '' })}
-                  />
-                ))}
-              </div>
+              <GradientColorPicker
+                value={diaryData.avoidColor}
+                onChange={(hex) => setDiaryData({ ...diaryData, avoidColor: hex })}
+                height={140}
+              />
             </div>
           </div>
         )}
@@ -227,6 +218,42 @@ const DiaryWriteScreen = ({ onClose }) => {
                   className="diary-custom-input"
                 />
               )}
+            </div>
+
+            {/* 시간대 선택 - 원형 배치 */}
+            <div className="diary-section">
+              <h3 className="diary-section-title">하루 중 어느 때인가요?</h3>
+              <div className="time-wheel">
+                <div className="time-wheel-center">시간대
+                  <br />선택
+                </div>
+                {timeOptions.map((label, idx) => (
+                  <button
+                    key={label}
+                    className={`time-wheel-item ${diaryData.timeOfDay === label ? 'selected' : ''}`}
+                    style={{
+                      '--tw-angle': `${(idx / timeOptions.length) * 360}deg`
+                    }}
+                    onClick={() => setDiaryData({ ...diaryData, timeOfDay: label })}
+                  >
+                    {label.split(' ')[0]}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* 현재 날씨 */}
+            <div className="diary-section">
+              <h3 className="diary-section-title">현재 날씨는 어떤가요?</h3>
+              <div className="chip-row">
+                {weatherOptions.map((w) => (
+                  <button
+                    key={w}
+                    className={`chip ${diaryData.weather === w ? 'active' : ''}`}
+                    onClick={() => setDiaryData({ ...diaryData, weather: w })}
+                  >{w}</button>
+                ))}
+              </div>
             </div>
 
             {/* 에피소드 */}

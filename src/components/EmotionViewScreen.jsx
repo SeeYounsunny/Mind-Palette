@@ -172,9 +172,15 @@ const EmotionViewScreen = () => {
     <div className="emotion-view-screen">
       <div className="emotion-view-container">
         {/* 헤더 */}
-        <div className="emotion-header">
-          <h1 className="emotion-main-title">나의 마음 팔레트</h1>
-          <p className="emotion-subtitle">색으로 나의 감정을 들여다봐요</p>
+        <div className="emotion-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div>
+            <h1 className="emotion-main-title">나의 마음 팔레트</h1>
+            <p className="emotion-subtitle">색으로 나의 감정을 들여다봐요</p>
+          </div>
+          <button className="share-btn-small" aria-label="공유">
+            <Share2 size={16} />
+            <span>공유</span>
+          </button>
         </div>
 
         {/* 통계 카드 */}
@@ -199,10 +205,6 @@ const EmotionViewScreen = () => {
         <div className="emotion-color-palette-section">
           <div className="section-header-row">
             <h3 className="section-title">감정 컬러 팔레트</h3>
-            <button className="share-btn-small">
-              <Share2 size={16} />
-              <span>공유</span>
-            </button>
           </div>
           <div className="color-palette-grid">
             {analysisData.topColors.map((colorData, index) => (
@@ -218,19 +220,7 @@ const EmotionViewScreen = () => {
               </div>
             ))}
           </div>
-          {/* 가로 막대 그래프 */}
-          <div className="color-palette-bar">
-            {analysisData.topColors.map((colorData, index) => (
-              <div
-                key={index}
-                className="color-bar-segment"
-                style={{
-                  backgroundColor: colorData.color,
-                  width: `${colorData.percentage}%`
-                }}
-              />
-            ))}
-          </div>
+          {/* 색상 비율 바 제거 */}
         </div>
 
         {/* 자주 느낀 감정 */}
