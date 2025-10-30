@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Share2 } from 'lucide-react';
+import { Share2, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const STORAGE_KEY = 'mind-palette-data';
 
 const EmotionViewScreen = () => {
   const [savedEntries, setSavedEntries] = useState([]);
+  const [currentDate, setCurrentDate] = useState(new Date());
 
   // 데이터 로드 함수
   const loadSavedEntries = () => {
@@ -43,19 +44,30 @@ const EmotionViewScreen = () => {
     };
   }, []);
 
-  // 분석 데이터 계산
+  const monthPrefix = useMemo(() => {
+    const y = currentDate.getFullYear();
+    const m = String(currentDate.getMonth() + 1).padStart(2, '0');
+    return `${y}-${m}`;
+  }, [currentDate]);
+
+  const monthlyEntries = useMemo(() => {
+    return savedEntries.filter(e => e.date?.startsWith(monthPrefix));
+  }, [savedEntries, monthPrefix]);
+
+  // 분석 데이터 계산 (월 기준)
   const analysisData = useMemo(() => {
-    if (!savedEntries || savedEntries.length === 0) return null;
+    const source = monthlyEntries;
+    if (!source || source.length === 0) return null;
 
     // 총 기록 일수 (중복 날짜 제거)
-    const uniqueDates = new Set(savedEntries.map(e => e.date));
+    const uniqueDates = new Set(source.map(e => e.date));
     const totalDays = uniqueDates.size;
 
     // 감정별 카운트
     const emotionCount = {};
     const emotionColors = {}; // 감정별 사용한 색상들
 
-    savedEntries.forEach(entry => {
+    source.forEach(entry => {
       if (entry.emotion) {
         emotionCount[entry.emotion] = (emotionCount[entry.emotion] || 0) + 1;
         if (entry.color) {
@@ -74,14 +86,14 @@ const EmotionViewScreen = () => {
 
     // 색상별 사용 횟수
     const colorCount = {};
-    savedEntries.forEach(entry => {
+    source.forEach(entry => {
       if (entry.color) {
         colorCount[entry.color] = (colorCount[entry.color] || 0) + 1;
       }
     });
 
     // 색상 사용률 계산
-    const totalColorUses = savedEntries.filter(e => e.color).length;
+    const totalColorUses = source.filter(e => e.color).length;
     const topColors = Object.entries(colorCount)
       .map(([color, count]) => ({
         color,
@@ -133,15 +145,33 @@ const EmotionViewScreen = () => {
       frequentEmotions,
       weeklyTrend
     };
-  }, [savedEntries]);
+  }, [monthlyEntries]);
+
+  const monthName = currentDate.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long' });
+  const changeMonth = (direction) => {
+    setCurrentDate(prev => {
+      const d = new Date(prev);
+      d.setMonth(prev.getMonth() + direction);
+      return d;
+    });
+  };
 
   if (!savedEntries || savedEntries.length === 0) {
     return (
       <div className="emotion-view-screen">
         <div className="emotion-view-container">
-          <div className="emotion-header">
+          <div className="emotion-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <h1 className="emotion-main-title">나의 마음 팔레트</h1>
             <p className="emotion-subtitle">색으로 나의 감정을 들여다봐요</p>
+            <button className="share-btn-small" aria-label="공유">
+              <Share2 size={16} />
+              <span>공유</span>
+            </button>
+          </div>
+          <div className="month-navigation">
+            <button onClick={() => changeMonth(-1)} className="month-arrow"><ChevronLeft size={20} /></button>
+            <div className="month-name">{monthName}</div>
+            <button onClick={() => changeMonth(1)} className="month-arrow"><ChevronRight size={20} /></button>
           </div>
           <div className="emotion-empty-state">
             <p className="empty-message">아직 분석할 데이터가 없습니다.</p>
@@ -183,8 +213,15 @@ const EmotionViewScreen = () => {
           </button>
         </div>
 
-        {/* 통계 카드 */}
-        <div className="emotion-stats-cards">
+        {/* 월 선택기 */}
+        <div className="month-navigation">
+          <button onClick={() => changeMonth(-1)} className="month-arrow"><ChevronLeft size={20} /></button>
+          <div className="month-name">{monthName}</div>
+          <button onClick={() => changeMonth(1)} className="month-arrow"><ChevronRight size={20} /></button>
+        </div>
+
+        {/* 통계 카드 (3개) */}
+        <div className="emotion-stats-cards" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
           <div className="stat-card stat-card-left">
             <div className="stat-icon-wrapper">
               <span className="stat-icon">📅</span>
@@ -192,12 +229,19 @@ const EmotionViewScreen = () => {
             </div>
             <div className="stat-value-large">{analysisData.totalDays}일</div>
           </div>
-          <div className="stat-card stat-card-right">
+          <div className="stat-card">
             <div className="stat-icon-wrapper">
-              <span className="stat-icon">📈</span>
+              <span className="stat-icon">😊</span>
               <span className="stat-label">최다 감정</span>
             </div>
             <div className="stat-value-large">{analysisData.mostFrequentEmotion || '-'}</div>
+          </div>
+          <div className="stat-card">
+            <div className="stat-icon-wrapper">
+              <span className="stat-icon">🎨</span>
+              <span className="stat-label">끌리는 색</span>
+            </div>
+            <div className="stat-value-large">{analysisData.topColors?.[0]?.color?.toUpperCase() || '-'}</div>
           </div>
         </div>
 
