@@ -270,7 +270,7 @@ const EmotionViewScreen = () => {
           {/* 색상 비율 바 제거 */}
         </div>
 
-        {/* 자주 느낀 감정 */}
+        {/* 자주 느낀 감정 분포도 (요약 도트) */}
         <div className="frequent-emotions-section">
           <h3 className="section-title">자주 느낀 감정</h3>
           <div className="frequent-emotions-list">
@@ -283,7 +283,7 @@ const EmotionViewScreen = () => {
                   </div>
                 </div>
                 <div className="emotion-colors-list">
-                  {emotionData.colors.map((color, colorIndex) => (
+                  {emotionData.colors.slice(0, 24).map((color, colorIndex) => (
                     <div
                       key={colorIndex}
                       className="emotion-color-dot"
@@ -296,16 +296,55 @@ const EmotionViewScreen = () => {
           </div>
         </div>
 
-        {/* 주간 기록 추이 */}
+        {/* 즐겨 쓰는 시간대 */}
         <div className="weekly-trend-section">
-          <h3 className="section-title">주간 기록 추이</h3>
-          <div className="weekly-trend-grid">
-            {analysisData.weeklyTrend.map((week, index) => (
-              <div key={index} className="weekly-trend-item">
-                <div className="weekly-trend-days">{week.days}일</div>
-                <div className="weekly-trend-label">{week.week}주</div>
-              </div>
-            ))}
+          <h3 className="section-title">즐겨 쓰는 시간대</h3>
+          <div className="frequent-emotions-list">
+            {['새벽 (04:00-06:00)','아침 (06:00-09:00)','오전 (09:00-12:00)','점심 (12:00-14:00)','오후 (14:00-17:00)','저녁 (17:00-20:00)','밤 (20:00-24:00)','심야 (24:00-04:00)'].map((slot) => {
+              const slotEntries = monthlyEntries.filter(e => e.timeOfDay === slot);
+              const colors = slotEntries.map(e => e.color).filter(Boolean).slice(0,24);
+              return (
+                <div key={slot} className="frequent-emotion-item">
+                  <div className="emotion-info-row">
+                    <div className="emotion-name-count">
+                      <span className="emotion-name-text">{slot.split(' ')[0]}</span>
+                      <span className="emotion-count-text">{slotEntries.length}회</span>
+                    </div>
+                  </div>
+                  <div className="emotion-colors-list">
+                    {colors.map((c, i) => (
+                      <div key={i} className="emotion-color-dot" style={{ backgroundColor: c || '#e5e7eb' }} />
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* 영향받는 날씨 */}
+        <div className="weekly-trend-section">
+          <h3 className="section-title">영향받는 날씨</h3>
+          <div className="frequent-emotions-list">
+            {['맑다','흐리다','비가 온다','바람이 분다','눈이 온다','기타'].map((w) => {
+              const wEntries = monthlyEntries.filter(e => e.weather === w);
+              const colors = wEntries.map(e => e.color).filter(Boolean).slice(0,24);
+              return (
+                <div key={w} className="frequent-emotion-item">
+                  <div className="emotion-info-row">
+                    <div className="emotion-name-count">
+                      <span className="emotion-name-text">{w}</span>
+                      <span className="emotion-count-text">{wEntries.length}회</span>
+                    </div>
+                  </div>
+                  <div className="emotion-colors-list">
+                    {colors.map((c, i) => (
+                      <div key={i} className="emotion-color-dot" style={{ backgroundColor: c || '#e5e7eb' }} />
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
