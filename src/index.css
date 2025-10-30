@@ -839,6 +839,7 @@ input:focus, textarea:focus {
   margin: 0 auto;
   padding-bottom: 100px;
   background: linear-gradient(135deg, #e0d2f7 0%, #a8d5f0 100%);
+  overflow-y: auto;
 }
 
 .emotion-view-container {

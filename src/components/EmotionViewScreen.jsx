@@ -163,10 +163,13 @@ const EmotionViewScreen = () => {
           <div className="emotion-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <h1 className="emotion-main-title">나의 마음 팔레트</h1>
             <p className="emotion-subtitle">색으로 나의 감정을 들여다봐요</p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span className="version-badge" style={{ fontSize: '0.75rem', color: '#9aa0b3' }}>v-emotion-redesign</span>
             <button className="share-btn-small" aria-label="공유">
               <Share2 size={16} />
               <span>공유</span>
             </button>
+          </div>
           </div>
           <div className="month-navigation">
             <button onClick={() => changeMonth(-1)} className="month-arrow"><ChevronLeft size={20} /></button>
