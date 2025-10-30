@@ -22,6 +22,7 @@ const DiaryWriteScreen = ({ onClose }) => {
   const [savedEntries, setSavedEntries] = useState([]);
   const [customEmotion, setCustomEmotion] = useState('');
   const [customWeatherFeeling, setCustomWeatherFeeling] = useState('');
+  const [activeColorPicker, setActiveColorPicker] = useState('attract'); // 'attract' | 'avoid'
 
   // 33개 컬러 팔레트
   const colors = [
@@ -176,24 +177,54 @@ const DiaryWriteScreen = ({ onClose }) => {
 
         {currentPage === 1 && (
           <div className="diary-page-content">
-            {/* 첫 번째 색상 선택 */}
+            {/* 색상 선택 - 단일 표시 토글 */}
             <div className="diary-color-section">
-              <h3 className="diary-color-title">지금 마음에 끌리는 색 하나를 선택해주세요.</h3>
-              <GradientColorPicker
-                value={diaryData.color}
-                onChange={(hex) => setDiaryData({ ...diaryData, color: hex })}
-                height={140}
-              />
-            </div>
+              <div className="chip-row" style={{ justifyContent: 'center', marginBottom: 12 }}>
+                <button
+                  className={`chip ${activeColorPicker === 'attract' ? 'active' : ''}`}
+                  onClick={() => setActiveColorPicker('attract')}
+                >끌리는 색</button>
+                <button
+                  className={`chip ${activeColorPicker === 'avoid' ? 'active' : ''}`}
+                  onClick={() => setActiveColorPicker('avoid')}
+                >덜어내고 싶은 색</button>
+              </div>
 
-            {/* 두 번째 색상 선택 */}
-            <div className="diary-color-section">
-              <h3 className="diary-color-title">지금 마음에서 덜어내고 싶은 색 하나를 선택해주세요.</h3>
-              <GradientColorPicker
-                value={diaryData.avoidColor}
-                onChange={(hex) => setDiaryData({ ...diaryData, avoidColor: hex })}
-                height={140}
-              />
+              {activeColorPicker === 'attract' && (
+                <>
+                  <h3 className="diary-color-title">지금 마음에 끌리는 색 하나를 선택해주세요.</h3>
+                  <GradientColorPicker
+                    value={diaryData.color}
+                    onChange={(hex) => setDiaryData({ ...diaryData, color: hex })}
+                    height={140}
+                  />
+                  {diaryData.color && (
+                    <div className="selected-color-chip" style={{ alignSelf: 'center' }}>
+                      <span className="selected-color-dot" style={{ backgroundColor: diaryData.color }} />
+                      <span className="selected-color-text">선택된 컬러</span>
+                      <span className="selected-color-hex">{diaryData.color}</span>
+                    </div>
+                  )}
+                </>
+              )}
+
+              {activeColorPicker === 'avoid' && (
+                <>
+                  <h3 className="diary-color-title">지금 마음에서 덜어내고 싶은 색 하나를 선택해주세요.</h3>
+                  <GradientColorPicker
+                    value={diaryData.avoidColor}
+                    onChange={(hex) => setDiaryData({ ...diaryData, avoidColor: hex })}
+                    height={140}
+                  />
+                  {diaryData.avoidColor && (
+                    <div className="selected-color-chip" style={{ alignSelf: 'center' }}>
+                      <span className="selected-color-dot" style={{ backgroundColor: diaryData.avoidColor }} />
+                      <span className="selected-color-text">선택된 컬러</span>
+                      <span className="selected-color-hex">{diaryData.avoidColor}</span>
+                    </div>
+                  )}
+                </>
+              )}
             </div>
           </div>
         )}
