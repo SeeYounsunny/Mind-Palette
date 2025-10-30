@@ -32,6 +32,20 @@ Mind Palette는 색상과 감정을 연결하여 매일의 감정을 기록하�
 - **에피소드 기록**: 자유로운 텍스트로 오늘의 이야기 기록
 - **날씨 & 느낌**: 날씨와 날씨에 대한 감정 기록
 
+### 🧭 Plan B(Figma) 기반 내비게이션 UI
+
+- **홈(HomeScreen)**: 오늘의 감정 기록 진입, 최근 기록 요약
+- **일기 작성(DiaryWriteScreen)**: 색상/감정/날씨를 단계별로 기록
+- **감정 보기(EmotionViewScreen)**: 기록 목록과 요약 뷰
+- **하단 내비게이션(BottomNavigation)**: 홈/일기/감정 간 탭 이동
+- 기본 앱 진입 시 Plan B UI가 활성화됨(`ColorDiaryAppFigma`)
+
+### ✍️ 다이어리 작성(Plan B)
+
+- **그라디언트 컬러 피커(1/2)**: 직관적인 색상·톤 선택
+- **동적 강도 슬라이더(2/2)**: 선택 색조에 따른 강도 조절
+- 단계별 입력 흐름(색상 → 감정/강도 → 메모/날씨/시간대)
+
 ### 📅 캘린더 뷰
 
 - **월별 캘린더**: 날짜별 색상 도트로 감정 시각화
@@ -47,6 +61,13 @@ Mind Palette는 색상과 감정을 연결하여 매일의 감정을 기록하�
 - **AI 인사이트**: 데이터 기반 감정 패턴 분석 결과 제공
 - **데이터 내보내기**: CSV 파일로 전체 데이터 백업
 
+### 😊 Emotion 화면(Plan B)
+
+- **월 선택자 + 3개 요약 카드**: 핵심 지표를 한눈에
+- **섹션 구성**: 자주 느낀 감정 점(dot), 시간대, 날씨 분포
+- **세부 분포/리스트**: 감정/색/일자별 정렬과 스크롤 폴리시 적용
+- **카드 간격/그림자 통일**: 일관된 가독성 및 시각적 위계
+
 ### 📸 공유 이미지 생성
 
 - **월간 팔레트 이미지**: 한 달의 감정을 모은 팔레트 이미지 자동 생성
@@ -61,6 +82,11 @@ Mind Palette는 색상과 감정을 연결하여 매일의 감정을 기록하�
 - **Vite**: 빠른 개발 환경 및 빌드 도구
 - **Lucide React**: 아이콘 라이브러리
 - **Tailwind CSS**: 유틸리티 기반 CSS 프레임워크
+
+추가사항:
+
+- **Plan B(Figma) UI 컴포넌트**: `HomeScreen`, `DiaryWriteScreen`, `EmotionViewScreen`, `BottomNavigation`
+- **입력 위젯**: `GradientColorPicker`
 
 ### 데이터 관리
 
@@ -119,6 +145,8 @@ npm run dev
 
 브라우저에서 `http://localhost:3000`으로 접속하여 앱을 사용할 수 있습니다.
 
+> 포트가 사용 중이면 Vite가 자동으로 `3001`, `3002` 등으로 변경합니다.
+
 ### 빌드
 
 ```bash
@@ -147,10 +175,16 @@ npx playwright show-report
 ```
 Mind-Palette/
 ├── src/
-│   ├── components/          # React 컴포넌트
-│   │   ├── ColorDiaryApp.jsx          # 메인 앱 컴포넌트
-│   │   ├── EmotionPaletteAnalysis.jsx # 감정 분석 컴포넌트
-│   │   └── ShareImageGenerator.jsx    # 공유 이미지 생성 컴포넌트
+│   ├── components/                  # React 컴포넌트
+│   │   ├── ColorDiaryApp.jsx              # 기존 메인 앱(캘린더/분석/공유)
+│   │   ├── ColorDiaryAppFigma.jsx         # Plan B(Figma) UI 엔트리
+│   │   ├── HomeScreen.jsx                 # Plan B 홈 화면
+│   │   ├── DiaryWriteScreen.jsx           # Plan B 일기 작성 화면
+│   │   ├── EmotionViewScreen.jsx          # Plan B 감정 보기 화면
+│   │   ├── BottomNavigation.jsx           # Plan B 하단 내비게이션
+│   │   ├── GradientColorPicker.jsx        # Plan B 그라디언트 컬러 피커
+│   │   ├── EmotionPaletteAnalysis.jsx     # 감정 분석 컴포넌트
+│   │   └── ShareImageGenerator.jsx        # 공유 이미지 생성 컴포넌트
 │   ├── data/                # 데이터 모델 및 관리
 │   │   ├── dataModels.js    # EmotionEntry 데이터 모델
 │   │   └── storageManager.js # LocalStorage 관리
@@ -163,20 +197,40 @@ Mind-Palette/
 ├── tests/                   # Playwright 테스트
 ├── vite.config.js           # Vite 설정
 ├── package.json             # 프로젝트 의존성
+├── PLAN_B_IMPLEMENTATION.md # Plan B 구현 메모
+├── .playwright-mcp/         # 스크린샷/프로토타입 참고 이미지
 └── README.md                # 프로젝트 문서
 ```
 
 ## 🎯 사용 방법
 
-### 일기 작성하기
+### Plan B(Figma) UI와 기존 UI 전환 방법
 
-1. **컬러 선택**: 33색 팔레트에서 지금 가장 끌리는 색상 선택
-2. **회피 컬러**: 피하고 싶은 색상 선택 (선택사항)
-3. **감정 선택**: 현재 느끼는 감정과 강도 선택
-4. **에피소드 기록**: 오늘 있었던 일이나 생각을 자유롭게 작성
-5. **시간대 선택**: 현재 시간대 선택
-6. **날씨 & 느낌**: 날씨와 날씨에 대한 감정 선택
-7. **저장**: 일기 저장하기 버튼 클릭
+기본값은 Plan B(Figma) UI입니다. `src/App.jsx`에서 다음과 같이 전환할 수 있습니다.
+
+```javascript
+// src/App.jsx
+// import ColorDiaryApp from './components/ColorDiaryApp' // 기존 UI (캘린더/분석/공유)
+import ColorDiaryAppFigma from "./components/ColorDiaryAppFigma"; // Plan B (Figma)
+
+function App() {
+  return (
+    <div>
+      <ColorDiaryAppFigma />
+      {/* 기존 UI 사용 시: <ColorDiaryApp /> */}
+    </div>
+  );
+}
+export default App;
+```
+
+### 일기 작성하기 (Plan B UI)
+
+1. 하단 탭에서 **일기**로 이동
+2. 컬러/감정/날씨 등 정보를 단계별로 입력
+3. 저장을 눌러 기록 완료
+
+> 기존 캘린더/분석/공유 플로우는 `ColorDiaryApp`에서 동일하게 제공됩니다.
 
 ### 일기 보기
 
@@ -196,6 +250,18 @@ Mind-Palette/
 - **공유 이미지 생성**: 상단의 "공유하기" 버튼 클릭
 - **이미지 생성**: 월간 감정 팔레트 이미지 자동 생성
 - **다운로드/공유**: 생성된 이미지를 다운로드하여 SNS에 공유
+
+### 스크린샷
+
+- 참고 이미지 경로(저장소 내):
+  - `.playwright-mcp/figma-prototype.png`
+  - `.playwright-mcp/figma-diary-write.png`
+  - `.playwright-mcp/emotion-view-screen.png`
+  - `.playwright-mcp/figma-emotion-view.png`
+  - `.playwright-mcp/figma-emotion-view-current.png`
+  - `.playwright-mcp/figma-emotion-view-detailed.png`
+
+이미지는 Plan B 레이아웃 및 스타일 기준의 참조 화면입니다.
 
 ## 🌈 컬러 팔레트
 
@@ -273,6 +339,13 @@ npx playwright test --project=chromium
 # 테스트 보고서 확인
 npx playwright show-report
 ```
+
+## 📝 변경 이력(요약)
+
+- feat: Plan B(Figma) UI 도입(홈/일기/감정 + 하단 내비게이션)
+- feat(diary): 1/2 그라디언트 컬러 피커, 2/2 동적 강도 슬라이더 추가
+- feat(emotion): 월 선택자/요약 카드/분포 섹션 추가 및 스크롤 폴리시
+- style(emotion): 카드 간격·그림자 통일, 미세 색상 조정
 
 ## 📄 라이선스
 
