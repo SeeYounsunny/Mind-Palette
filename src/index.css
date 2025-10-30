@@ -8,14 +8,25 @@ body {
   font-family: 'Nanum Gothic', 'Apple SD Gothic Neo', 'Malgun Gothic', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  margin: 0;
+  padding: 0;
   min-height: 100vh;
-  padding: 20px;
+}
+
+/* Figma 브랜치에서는 배경을 컴포넌트에서 처리 */
+body:not(.legacy-mode) {
+  background: transparent;
+  padding: 0;
 }
 
 #root {
-  max-width: 1200px;
-  margin: 0 auto;
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* Figma 브랜치에서는 전체 너비 사용 */
+.figma-app #root {
+  max-width: none;
 }
 
 /* Tailwind-like utility classes */
@@ -208,4 +219,819 @@ input:focus, textarea:focus {
   border: 2px solid white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
+
+/* Figma Design Styles - Plan B */
+.figma-app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, #e0d2f7 0%, #a8d5f0 100%);
+  position: relative;
+  overflow-x: hidden;
+}
+
+.app-content {
+  flex: 1;
+  padding-bottom: 80px; /* 하단 네비게이션 공간 */
+}
+
+/* Home Screen Styles */
+.home-screen {
+  position: relative;
+  min-height: 100vh;
+  padding: 20px;
+  max-width: 428px;
+  margin: 0 auto;
+}
+
+.home-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, #e0d2f7 0%, #a8d5f0 100%);
+  z-index: -1;
+}
+
+.app-title {
+  font-family: 'Brush Script MT', 'Comic Sans MS', cursive, 'Nanum Gothic', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 400;
+  color: white;
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 30px;
+  letter-spacing: 2px;
+}
+
+.days-card {
+  width: 140px;
+  height: 140px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  margin: 0 auto 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.days-number {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #333;
+  line-height: 1;
+}
+
+.days-label {
+  font-size: 1rem;
+  color: #666;
+  margin-top: 5px;
+}
+
+.weekly-summary {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.week-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.week-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+.week-circle.filled {
+  border: 2px solid rgba(255, 255, 255, 0.8);
+}
+
+.week-circle.empty {
+  background: transparent;
+}
+
+.week-day-label {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+}
+
+.encouragement-message {
+  text-align: center;
+  color: white;
+  font-size: 1rem;
+  margin-bottom: 25px;
+  font-weight: 400;
+}
+
+.month-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.month-arrow {
+  background: rgba(255, 255, 255, 0.3);
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: white;
+  transition: all 0.2s;
+}
+
+.month-arrow:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.month-name {
+  font-size: 1.25rem;
+  color: white;
+  font-weight: 500;
+}
+
+.calendar-container {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  border-radius: 24px;
+  padding: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.weekday-label {
+  text-align: center;
+  font-size: 0.875rem;
+  color: white;
+  font-weight: 600;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+}
+
+.calendar-day {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.calendar-day-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.calendar-day-number {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+}
+
+.calendar-day.other-month .calendar-day-number {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* Bottom Navigation */
+.bottom-navigation {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 12px 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  max-width: 428px;
+  margin: 0 auto;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px 16px;
+  color: #999;
+  transition: all 0.2s;
+}
+
+.nav-item.active {
+  color: #667eea;
+}
+
+.nav-item span {
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.nav-item.active span {
+  font-weight: 600;
+}
+
+/* Diary Write Screen Styles */
+.diary-write-screen {
+  min-height: 100vh;
+  padding: 20px;
+  max-width: 428px;
+  margin: 0 auto;
+  padding-bottom: 100px;
+}
+
+.diary-write-container {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 24px;
+  padding: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.diary-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.diary-close-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #666;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.diary-page-indicator {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.diary-next-btn {
+  background: #667eea;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.diary-next-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.diary-date {
+  margin-bottom: 24px;
+}
+
+.diary-date-input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  font-size: 1rem;
+  background: #f9f9f9;
+  color: #333;
+}
+
+.diary-page-content {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.diary-color-section {
+  margin-bottom: 24px;
+}
+
+.diary-color-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.diary-color-grid {
+  display: grid;
+  grid-template-columns: repeat(11, 1fr);
+  gap: 8px;
+  max-width: 100%;
+}
+
+.diary-color-btn {
+  aspect-ratio: 1;
+  width: 100%;
+  border-radius: 50%;
+  border: 2px solid #e0e0e0;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.diary-color-btn.selected {
+  border: 3px solid #667eea;
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.diary-section {
+  margin-bottom: 24px;
+}
+
+.diary-section-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.diary-emotion-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.diary-emotion-btn {
+  padding: 12px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  background: white;
+  color: #333;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.diary-emotion-btn:hover {
+  border-color: #667eea;
+  background: #f0f4ff;
+}
+
+.diary-emotion-btn.selected {
+  border-color: #667eea;
+  background: #667eea;
+  color: white;
+}
+
+.diary-custom-input {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #667eea;
+  border-radius: 12px;
+  font-size: 1rem;
+  margin-top: 12px;
+}
+
+.diary-episode-textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  font-size: 1rem;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.diary-episode-textarea:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.diary-save-btn {
+  width: 100%;
+  padding: 16px;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 24px;
+}
+
+.diary-save-btn:hover:not(:disabled) {
+  background: #5568d3;
+}
+
+.diary-save-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* Emotion View Screen Styles */
+.emotion-view-screen {
+  min-height: 100vh;
+  padding: 20px;
+  max-width: 428px;
+  margin: 0 auto;
+  padding-bottom: 100px;
+  background: linear-gradient(135deg, #e0d2f7 0%, #a8d5f0 100%);
+}
+
+.emotion-view-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.emotion-header {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.emotion-main-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.emotion-subtitle {
+  font-size: 1rem;
+  color: #666;
+  margin: 0;
+}
+
+.emotion-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.empty-message {
+  font-size: 1rem;
+  color: #999;
+  margin-bottom: 8px;
+}
+
+.empty-submessage {
+  font-size: 0.875rem;
+  color: #bbb;
+}
+
+/* 통계 카드 */
+.emotion-stats-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.stat-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 20px;
+  text-align: left;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+}
+
+.stat-card:first-child::before {
+  background: linear-gradient(135deg, #e9d5ff 0%, #faf5ff 100%);
+}
+
+.stat-card:last-child::before {
+  background: linear-gradient(135deg, #fce7f3 0%, #fdf2f8 100%);
+}
+
+.stat-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.stat-icon-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.stat-icon {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  color: #666;
+  font-weight: 500;
+}
+
+.stat-value-large {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #333;
+  margin-top: 4px;
+}
+
+/* 감정 컬러 팔레트 섹션 */
+.emotion-color-palette-section {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-bottom: 8px;
+}
+
+.section-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.section-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #333;
+}
+
+.share-btn-small {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #667eea;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.share-btn-small:hover {
+  background: #5568d3;
+}
+
+.color-palette-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.color-palette-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.color-palette-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.color-palette-info {
+  text-align: center;
+}
+
+.color-palette-count {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 2px;
+}
+
+.color-palette-percentage {
+  font-size: 0.625rem;
+  color: #666;
+}
+
+.color-palette-bar {
+  display: flex;
+  width: 100%;
+  height: 32px;
+  border-radius: 16px;
+  overflow: hidden;
+  margin-top: 16px;
+}
+
+.color-bar-segment {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+/* 자주 느낀 감정 섹션 */
+.frequent-emotions-section {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-bottom: 8px;
+}
+
+.frequent-emotions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.frequent-emotion-item {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.emotion-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.emotion-name-count {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.emotion-name-text {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.emotion-count-text {
+  font-size: 0.875rem;
+  color: #666;
+}
+
+.emotion-colors-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.emotion-color-dot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* 주간 기록 추이 */
+.weekly-trend-section {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-bottom: 8px;
+}
+
+.weekly-trend-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+}
+
+.weekly-trend-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 8px;
+  background: rgba(102, 126, 234, 0.1);
+  border-radius: 8px;
+}
+
+.weekly-trend-days {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #667eea;
+}
+
+.weekly-trend-label {
+  font-size: 0.75rem;
+  color: #666;
+}
+
+.emotion-period-selector {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.period-btn {
+  padding: 8px 20px;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  background: white;
+  color: #666;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.period-btn:hover {
+  border-color: #667eea;
+  background: #f0f4ff;
+}
+
+.period-btn.active {
+  border-color: #667eea;
+  background: #667eea;
+  color: white;
+}
+
+.emotion-insight-card {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 8px;
+}
+
+.insight-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.insight-icon {
+  color: #667eea;
+}
+
+.insight-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.insight-text {
+  font-size: 1rem;
+  color: #666;
+  line-height: 1.6;
+}
+
 
