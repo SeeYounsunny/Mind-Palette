@@ -1,8 +1,10 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 // Rectangular gradient picker using canvas. Emits HEX on click.
 const GradientColorPicker = ({ value, onChange, height = 140 }) => {
   const canvasRef = useRef(null);
+  const wrapperRef = useRef(null);
+  const [cursorPos, setCursorPos] = useState(null); // {x, y}
 
   const drawGradient = (ctx, width, height) => {
     // Horizontal hue gradient
@@ -46,6 +48,7 @@ const GradientColorPicker = ({ value, onChange, height = 140 }) => {
     const rect = canvas.getBoundingClientRect();
     const x = Math.min(Math.max(evt.clientX - rect.left, 0), rect.width - 1);
     const y = Math.min(Math.max(evt.clientY - rect.top, 0), height - 1);
+    setCursorPos({ x, y });
 
     const dpr = window.devicePixelRatio || 1;
     const ctx = canvas.getContext('2d');
@@ -57,7 +60,7 @@ const GradientColorPicker = ({ value, onChange, height = 140 }) => {
   };
 
   return (
-    <div className="gradient-picker-wrapper">
+    <div className="gradient-picker-wrapper" ref={wrapperRef}>
       <canvas
         ref={canvasRef}
         className="gradient-picker-canvas"
@@ -65,8 +68,24 @@ const GradientColorPicker = ({ value, onChange, height = 140 }) => {
         onMouseDown={pickColor}
         onMouseMove={(e) => {
           if (e.buttons === 1) pickColor(e);
+          else {
+            const rect = canvasRef.current?.getBoundingClientRect();
+            if (!rect) return;
+            const x = Math.min(Math.max(e.clientX - rect.left, 0), rect.width - 1);
+            const y = Math.min(Math.max(e.clientY - rect.top, 0), height - 1);
+            setCursorPos({ x, y });
+          }
         }}
       />
+      {cursorPos && (
+        <div
+          className="gradient-crosshair"
+          style={{ left: cursorPos.x, top: cursorPos.y }}
+        >
+          <div className="crosshair-h" />
+          <div className="crosshair-v" />
+        </div>
+      )}
       {value ? (
         <div className="gradient-picker-indicator" style={{ backgroundColor: value }} />
       ) : null}

@@ -9,6 +9,7 @@ const STORAGE_KEY = 'mind-palette-data';
 const DiaryWriteScreen = ({ onClose }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [diaryData, setDiaryData] = useState({
+    date: new Date().toISOString().split('T')[0],
     color: '',
     avoidColor: '',
     emotion: '',
@@ -84,8 +85,8 @@ const DiaryWriteScreen = ({ onClose }) => {
   };
 
   const handleSave = async () => {
-    const today = new Date().toISOString().split('T')[0];
-    const todayEntries = savedEntries.filter(entry => entry.date === today);
+    const targetDate = diaryData.date || new Date().toISOString().split('T')[0];
+    const todayEntries = savedEntries.filter(entry => entry.date === targetDate);
 
     if (todayEntries.length >= 4) {
       alert('하루에 최대 4개의 일기만 작성할 수 있습니다.');
@@ -105,7 +106,8 @@ const DiaryWriteScreen = ({ onClose }) => {
         weather: diaryData.weather,
         weatherFeeling: finalWeatherFeeling,
         customEmotion: finalEmotion === '기타' ? customEmotion : '',
-        memo: diaryData.episode
+        memo: diaryData.episode,
+        date: targetDate
       });
 
       const saveSuccess = storageManager.saveEmotionEntry(emotionEntry);
@@ -116,11 +118,12 @@ const DiaryWriteScreen = ({ onClose }) => {
           try {
             const parsedData = JSON.parse(savedData);
             setSavedEntries(parsedData);
-            alert(`오늘의 ${todayEntries.length + 1}번째 일기가 저장되었습니다!`);
+            alert(`${targetDate}의 ${todayEntries.length + 1}번째 일기가 저장되었습니다!`);
             
             // 초기화
             setCurrentPage(1);
             setDiaryData({
+              date: new Date().toISOString().split('T')[0],
               color: '',
               avoidColor: '',
               emotion: '',
@@ -161,9 +164,14 @@ const DiaryWriteScreen = ({ onClose }) => {
           </button>
         </div>
 
-        {/* 날짜 표시 */}
+        {/* 날짜 선택 */}
         <div className="diary-date">
-          <input type="date" value={today} readOnly className="diary-date-input" />
+          <input
+            type="date"
+            value={diaryData.date || today}
+            onChange={(e) => setDiaryData({ ...diaryData, date: e.target.value })}
+            className="diary-date-input"
+          />
         </div>
 
         {currentPage === 1 && (
@@ -217,6 +225,27 @@ const DiaryWriteScreen = ({ onClose }) => {
                   onChange={(e) => setCustomEmotion(e.target.value)}
                   className="diary-custom-input"
                 />
+              )}
+              {diaryData.emotion && (
+                <div className="intensity-wrapper">
+                  <div className="intensity-row">
+                    <span>감정의 강도</span>
+                    <span className="intensity-value">{diaryData.emotionIntensity}/5</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="1"
+                    max="5"
+                    step="1"
+                    value={diaryData.emotionIntensity}
+                    onChange={(e) => setDiaryData({ ...diaryData, emotionIntensity: Number(e.target.value) })}
+                    className="intensity-slider"
+                  />
+                  <div className="intensity-scale">
+                    <span>매우 약함</span>
+                    <span>매우 강함</span>
+                  </div>
+                </div>
               )}
             </div>
 
