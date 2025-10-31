@@ -262,7 +262,9 @@ const EmotionViewScreen = () => {
           <div className="stat-card">
             <div className="stat-icon-wrapper">
               <span className="stat-icon">😊</span>
-              <span className="stat-label">최다 감정</span>
+              <span className="stat-label">
+                최다<br />감정
+              </span>
             </div>
             <div className="stat-value-large stat-one-line">{analysisData.mostFrequentEmotion || '-'}</div>
           </div>
