@@ -362,7 +362,7 @@ input:focus, textarea:focus {
 
 .month-name {
   font-size: 1.25rem;
-  color: white;
+  color: #333;
   font-weight: 500;
 }
 
