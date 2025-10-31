@@ -241,7 +241,7 @@ const EmotionViewScreen = () => {
               <span className="stat-icon">🎨</span>
               <span className="stat-label">끌리는 색</span>
             </div>
-            <div className="stat-value-large">{analysisData.topColors?.[0]?.color?.toUpperCase() || '-'}</div>
+            <div className="stat-value-large" style={{ fontSize: '1rem' }}>{analysisData.topColors?.[0]?.color?.toUpperCase() || '-'}</div>
           </div>
         </div>
 
