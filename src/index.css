@@ -953,6 +953,14 @@ input:focus, textarea:focus {
   margin-top: 4px;
 }
 
+/* Single-line helper for stat card values */
+.stat-one-line {
+  font-size: 1.25rem; /* smaller so long Korean words fit */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 /* 감정 컬러 팔레트 섹션 */
 .emotion-color-palette-section {
   background: rgba(255, 255, 255, 0.96);
