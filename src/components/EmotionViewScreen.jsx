@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Share2, ChevronLeft, ChevronRight } from 'lucide-react';
+import SharePreviewModal from './SharePreviewModal.jsx';
 
 const STORAGE_KEY = 'mind-palette-data';
 
 const EmotionViewScreen = () => {
   const [savedEntries, setSavedEntries] = useState([]);
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [showShareModal, setShowShareModal] = useState(false);
 
   // 데이터 로드 함수
   const loadSavedEntries = () => {
@@ -163,10 +165,10 @@ const EmotionViewScreen = () => {
           <div className="emotion-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <h1 className="emotion-main-title">나의 마음 팔레트</h1>
             <p className="emotion-subtitle">색으로 나의 감정을 들여다봐요</p>
-          <button className="share-btn-small" aria-label="공유">
-            <Share2 size={16} />
-            <span>공유</span>
-          </button>
+            <button className="share-btn-small" aria-label="공유" onClick={() => setShowShareModal(true)}>
+              <Share2 size={16} />
+              <span>공유</span>
+            </button>
           </div>
           <div className="month-navigation">
             <button onClick={() => changeMonth(-1)} className="month-arrow"><ChevronLeft size={20} /></button>
@@ -178,6 +180,33 @@ const EmotionViewScreen = () => {
             <p className="empty-submessage">일기를 더 작성해보세요!</p>
           </div>
         </div>
+
+        {/* 공유 미리보기 모달 */}
+        <SharePreviewModal
+          isOpen={showShareModal}
+          onClose={() => setShowShareModal(false)}
+          onSave={async (element) => {
+            try {
+              const html2canvas = (await import('html2canvas')).default;
+              const canvas = await html2canvas(element, {
+                backgroundColor: '#ffffff',
+                scale: 2,
+              });
+              const dataUrl = canvas.toDataURL('image/png');
+              const link = document.createElement('a');
+              link.download = `나의_${currentDate.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long' })}_감정팔레트.png`;
+              link.href = dataUrl;
+              link.click();
+              setShowShareModal(false);
+            } catch (error) {
+              console.error('이미지 저장 실패:', error);
+              alert('이미지 저장 중 오류가 발생했습니다.');
+            }
+          }}
+          monthlyEntries={[]}
+          currentDate={currentDate}
+          topEmotions={[]}
+        />
       </div>
     );
   }
@@ -207,10 +236,10 @@ const EmotionViewScreen = () => {
             <h1 className="emotion-main-title">나의 마음 팔레트</h1>
             <p className="emotion-subtitle">색으로 나의 감정을 들여다봐요</p>
           </div>
-          <button className="share-btn-small" aria-label="공유">
-            <Share2 size={16} />
-            <span>공유</span>
-          </button>
+            <button className="share-btn-small" aria-label="공유" onClick={() => setShowShareModal(true)}>
+              <Share2 size={16} />
+              <span>공유</span>
+            </button>
         </div>
 
         {/* 월 선택기 */}
@@ -345,6 +374,33 @@ const EmotionViewScreen = () => {
           </div>
         </div>
       </div>
+
+      {/* 공유 미리보기 모달 */}
+      <SharePreviewModal
+        isOpen={showShareModal}
+        onClose={() => setShowShareModal(false)}
+        onSave={async (element) => {
+          try {
+            const html2canvas = (await import('html2canvas')).default;
+            const canvas = await html2canvas(element, {
+              backgroundColor: '#ffffff',
+              scale: 2,
+            });
+            const dataUrl = canvas.toDataURL('image/png');
+            const link = document.createElement('a');
+            link.download = `나의_${currentDate.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long' })}_감정팔레트.png`;
+            link.href = dataUrl;
+            link.click();
+            setShowShareModal(false);
+          } catch (error) {
+            console.error('이미지 저장 실패:', error);
+            alert('이미지 저장 중 오류가 발생했습니다.');
+          }
+        }}
+        monthlyEntries={monthlyEntries}
+        currentDate={currentDate}
+        topEmotions={analysisData?.frequentEmotions?.slice(0, 5).map(e => e.emotion) || []}
+      />
     </div>
   );
 };
