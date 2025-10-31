@@ -1263,6 +1263,8 @@ input:focus, textarea:focus {
 
 .share-modal-body {
   padding: 24px;
+  background: linear-gradient(135deg, #e0d2f7 0%, #a8d5f0 100%);
+  border-radius: 0 0 24px 24px;
 }
 
 .share-preview-title {

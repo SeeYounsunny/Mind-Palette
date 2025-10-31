@@ -189,8 +189,9 @@ const EmotionViewScreen = () => {
             try {
               const html2canvas = (await import('html2canvas')).default;
               const canvas = await html2canvas(element, {
-                backgroundColor: '#ffffff',
+                backgroundColor: null,
                 scale: 2,
+                useCORS: true,
               });
               const dataUrl = canvas.toDataURL('image/png');
               const link = document.createElement('a');
@@ -383,8 +384,9 @@ const EmotionViewScreen = () => {
           try {
             const html2canvas = (await import('html2canvas')).default;
             const canvas = await html2canvas(element, {
-              backgroundColor: '#ffffff',
+              backgroundColor: null,
               scale: 2,
+              useCORS: true,
             });
             const dataUrl = canvas.toDataURL('image/png');
             const link = document.createElement('a');
